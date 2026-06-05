@@ -1,4 +1,4 @@
-from boundary.parsed_input import ParsedInput
+from control.parsed_input import ParsedInput
 from control.conversion_result import ConversionLine, ConversionResult
 from entity.conversion_service import ConversionService
 from entity.quantity import Quantity

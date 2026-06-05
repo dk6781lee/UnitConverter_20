@@ -1,7 +1,7 @@
 from decimal import Decimal, InvalidOperation
 
 from boundary.boundary_error import BoundaryError, E001_MESSAGE, E002_TEMPLATE
-from boundary.parsed_input import ParsedInput
+from control.parsed_input import ParsedInput
 
 
 class CliParser:

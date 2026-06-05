@@ -1,6 +1,6 @@
 from boundary.boundary_error import BoundaryError, E003_TEMPLATE, E004_TEMPLATE
 from boundary.cli_parser import CliParser
-from boundary.parsed_input import ParsedInput
+from control.parsed_input import ParsedInput
 from entity.unit_registry import UnitRegistry
 
 
