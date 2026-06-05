@@ -1,0 +1,40 @@
+# UnitConverter_20 — Cursor Agent Rules
+# SSOT: docs/PRD.md · Runtime Python 3.11+ · pytest
+
+## Domain
+- CLI 입력: `{unit}:{value}` 한 줄. 허브 단위는 **meter**. 초기 Registry: meter, feet, yard (`config/units.json`).
+- 변환: `meters_per_unit` 기준 hub-and-spoke. 비율은 Registry/설정 SSOT — 코드에 literal 하드코딩 금지.
+- README snapshot (Boundary, RG-04): `meter:2.5` → stdout `2.5 meter = 8.2 feet`, `2.5 meter = 2.7 yard` (소수 **1자리 half-up**).
+- Domain 정밀도 (Entity): Formatter 이전 **full Decimal**. `D-CNV-02` round-trip — feet 환산 예: **8.20210** ft (ε/exact). **표시값(8.2)과 Domain 값 혼용 금지**.
+- 에러 stderr + exit는 PRD §3.5 전문 equality. `{token}`/`{unit}`/`{value}`/`{reason}`/`{format}` 치환 SSOT.
+  - E001 exit 1: `Invalid format. Use unit:value (ex: meter:2.5)` — 형식(`:` 없음, 빈 unit/value)
+  - E002 exit 2: `Invalid number: {token}` — 숫자 parse 실패
+  - E003 exit 3: `Unknown unit: {unit}` — 미등록 단위
+  - E004 exit 4: `Negative value not allowed: {value}` — 음수 value
+  - E005 exit 5: `Config load failed: {reason}` — config 누락·스키마 오류, **3단위 fallback 금지**
+  - E006~E008: PRD §3.5 (등록/포맷/내부 오류)
+
+## Architecture (BCE + Data)
+- 의존 방향: **boundary → control → entity**. **data → entity** (port: `IUnitRatioSource` 등).
+- **entity는 boundary / control / data import 금지** (Domain 순수성).
+- 역할 분리 (SRP): Parser · Registry · Converter(ConversionService) · Formatter — main() 만능 함수 금지.
+- OCP: 단위 추가 시 `if unit == "feet"` / elif 체인 확장 금지. **`Registry.register` + 설정**으로만 확장. 단위 추가 시 ConversionService **diff 0** 목표.
+- 레이어 매핑: boundary=파싱·표시·stderr/stdout, control=UseCase, entity=Quantity·ConversionService·UnitRegistry, data=JsonUnitRatioSource.
+
+## Dual-Track TDD
+- **Domain Track** `tests/domain/` — Test ID `D-*` (예: D-CNV-*, D-CFG-*, D-REG-*). Service/Registry/I/O **Mock 금지**. Decimal·DomainError assert.
+- **Boundary Track** `tests/boundary/` — Test ID `U-*` (예: U-IN-*, **U-OUT-*** 출력 snapshot). Domain Mock **허용**. stderr/stdout/exit code SSOT.
+- **Data Track** `tests/data/` — config 로드, temp files, LoadError→E005.
+- 중복 금지: 환산 정확도 → `D-CNV-*` only. `8.2 feet` 문자열 → `U-OUT-*` only.
+- 출력 포맷: `text`(default)·`json`·`csv`·`table` — Domain 동형(환산값 집합 동일), 포맷만 다름 (`U-OUT-01b/c/d`).
+- POLICY-O01: 모든 stdout 줄이 **원 입력 prefix**로 시작 (예: `2.5 meter = …`). 입력 단위 자기 줄 포함.
+
+## TDD Workflow
+- **RED → GREEN → REFACTOR** 엄수. assert 완화, `@pytest.mark.skip`, `xfail` **금지** (merge 전 skip/xfail 0).
+- 테스트·구현은 PRD Test ID·AC에 연결. 스펙 없는 알고리즘 invent 금지.
+- Harness: `pytest` + `tests/{domain,boundary,data}/`. `config/units.json` schema — `units[].name`, `meters_per_unit` (Decimal string, >0).
+- **git commit은 사용자가 요청할 때만** 생성. push/amend/force는 사용자 명시 시에만.
+
+## File discipline
+- 계약 변경은 `docs/PRD.md` 먼저. 구현은 요청된 범위만 — 무관 파일·문서 생성 금지.
+- RG-04·POLICY-O01·snapshot 변경은 PRD/AC 동시 갱신 + 변경 이유 명시 (강사 승인 항목 준수).
