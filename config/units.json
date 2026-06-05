@@ -1,0 +1,8 @@
+{
+  "$schema": "unitconverter/units-v1",
+  "units": [
+    { "name": "meter", "meters_per_unit": "1" },
+    { "name": "feet",  "meters_per_unit": "0.3048" },
+    { "name": "yard",  "meters_per_unit": "0.9144" }
+  ]
+}

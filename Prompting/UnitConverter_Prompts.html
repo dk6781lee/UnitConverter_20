@@ -1,0 +1,2042 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>UnitConverter 실습 Prompt 모음</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --card: #1a2332;
+      --border: #2d3a4f;
+      --text: #e7ecf3;
+      --muted: #8b9cb3;
+      --accent: #5b9fd4;
+      --red: #e85d5d;
+      --green: #5dce8a;
+      --refactor: #c9a227;
+      --repeat: #b07ce8;
+      --spec: #7eb8da;
+      --ext: #e8a85d;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Pretendard", "Malgun Gothic", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+      font-size: 15px;
+    }
+    header {
+      padding: 2rem 1.5rem 1rem;
+      border-bottom: 1px solid var(--border);
+      max-width: 920px;
+      margin: 0 auto;
+    }
+    header h1 { margin: 0 0 0.5rem; font-size: 1.5rem; }
+    header p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+    nav {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    nav a {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.85rem;
+      padding: 0.25rem 0.6rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+    }
+    nav a:hover { background: var(--card); }
+    main {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 0 1.5rem 3rem;
+    }
+    section { margin-top: 2.5rem; }
+    section > h2 {
+      font-size: 1.25rem;
+      margin: 0 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--border);
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem 1.35rem;
+      margin-bottom: 1.25rem;
+    }
+    .card h3 { margin: 0 0 0.5rem; font-size: 1.05rem; }
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 0.75rem;
+    }
+    .tag {
+      font-size: 0.72rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .tag-red { background: rgba(232, 93, 93, 0.2); color: var(--red); }
+    .tag-green { background: rgba(93, 206, 138, 0.2); color: var(--green); }
+    .tag-refactor { background: rgba(201, 162, 39, 0.2); color: var(--refactor); }
+    .tag-repeat { background: rgba(176, 124, 232, 0.2); color: var(--repeat); }
+    .tag-setup { background: rgba(91, 159, 212, 0.2); color: var(--accent); }
+    .tag-ask { background: rgba(139, 156, 179, 0.25); color: var(--muted); }
+    .tag-spec { background: rgba(126, 184, 218, 0.2); color: var(--spec); }
+    .tag-ext { background: rgba(232, 168, 93, 0.2); color: var(--ext); }
+    .tag-git { background: rgba(139, 156, 179, 0.3); color: #c8d4e0; }
+    .desc {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin: 0 0 0.85rem;
+    }
+    .prompt-wrap { position: relative; margin: 0; }
+    .prompt-wrap .copy-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      z-index: 2;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      font-family: inherit;
+      color: var(--text);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+    .prompt-wrap .copy-btn:hover {
+      background: #243044;
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .prompt-wrap .copy-btn:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    .prompt-wrap .copy-btn.copied {
+      background: rgba(93, 206, 138, 0.15);
+      border-color: var(--green);
+      color: var(--green);
+    }
+    pre.prompt {
+      margin: 0;
+      padding: 1rem 1.1rem;
+      padding-top: 2.35rem;
+      background: #0a0e14;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: "Consolas", "D2Coding", monospace;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      color: #c8d4e0;
+    }
+    .note {
+      margin-top: 2rem;
+      padding: 1rem;
+      border-left: 3px solid var(--accent);
+      background: rgba(91, 159, 212, 0.08);
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+    .note-warn {
+      border-left-color: var(--red);
+      background: rgba(232, 93, 93, 0.08);
+    }
+    .flow {
+      font-family: monospace;
+      font-size: 0.8rem;
+      color: var(--muted);
+      white-space: pre;
+      line-height: 1.5;
+    }
+    table.branch {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      margin: 0.75rem 0 1rem;
+    }
+    table.branch th,
+    table.branch td {
+      border: 1px solid var(--border);
+      padding: 0.5rem 0.65rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    table.branch th {
+      background: #0a0e14;
+      color: var(--accent);
+    }
+    .ok { color: var(--green); }
+    .warn { color: var(--ext); }
+
+    /* ── Prompt vs 참고 구분 ── */
+    .nav-row {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 0 1.5rem 0.5rem;
+    }
+    .nav-row .nav-label {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0.75rem 0 0.4rem;
+    }
+    .nav-row .nav-label:first-child { margin-top: 0; }
+    .nav-row .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .nav-row a.nav-ref {
+      color: var(--muted);
+      border-color: #3d4d66;
+    }
+    .nav-row a.nav-prompt {
+      color: var(--accent);
+      border-color: var(--accent);
+      border-width: 1px;
+    }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem 1.25rem;
+      margin-top: 0.75rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .legend-swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+    .swatch-ref { background: #4a5568; }
+    .swatch-spec { background: var(--spec); }
+    .swatch-red { background: var(--red); }
+    .swatch-green { background: var(--green); }
+    .swatch-refactor { background: var(--refactor); }
+    .swatch-ext { background: var(--ext); }
+
+    section > .section-hint {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin: -0.5rem 0 1.25rem;
+      padding: 0.5rem 0.75rem;
+      background: rgba(139, 156, 179, 0.08);
+      border-radius: 6px;
+    }
+    section > .section-hint.prompt-only {
+      background: rgba(91, 159, 212, 0.1);
+      border-left: 3px solid var(--accent);
+    }
+
+    .card-ref {
+      background: #151c28;
+      border: 1px solid var(--border);
+      border-left: 4px solid #4a5568;
+    }
+    .card-ref .card-type {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #9aa8bc;
+      background: rgba(139, 156, 179, 0.15);
+      padding: 0.12rem 0.45rem;
+      border-radius: 4px;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-prompt {
+      border-left-width: 4px;
+      border-left-style: solid;
+      position: relative;
+      padding-top: 2.35rem;
+    }
+    .card-prompt .card-type {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #0f1419;
+      padding: 0.12rem 0.45rem;
+      border-radius: 4px;
+      margin-bottom: 0.35rem;
+    }
+    .card-prompt .card-type { background: var(--accent); color: #0f1419; }
+    .card-prompt-spec { border-left-color: var(--spec); }
+    .card-prompt-spec .card-type { background: var(--spec); }
+    .card-prompt-red { border-left-color: var(--red); }
+    .card-prompt-red .card-type { background: var(--red); color: #fff; }
+    .card-prompt-green { border-left-color: var(--green); }
+    .card-prompt-green .card-type { background: var(--green); color: #0f1419; }
+    .card-prompt-refactor { border-left-color: var(--refactor); }
+    .card-prompt-refactor .card-type { background: var(--refactor); color: #0f1419; }
+    .card-prompt-ext { border-left-color: var(--ext); }
+    .card-prompt-ext .card-type { background: var(--ext); color: #0f1419; }
+    .card-prompt-neutral { border-left-color: var(--accent); }
+
+    .card-prompt h3 {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.5rem 0.65rem;
+    }
+    .prompt-id {
+      font-family: "Consolas", "D2Coding", monospace;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--accent);
+      background: rgba(91, 159, 212, 0.12);
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      border: 1px solid rgba(91, 159, 212, 0.35);
+      flex-shrink: 0;
+    }
+    .card-prompt-red .prompt-id { color: var(--red); border-color: rgba(232, 93, 93, 0.4); background: rgba(232, 93, 93, 0.1); }
+    .card-prompt-green .prompt-id { color: var(--green); border-color: rgba(93, 206, 138, 0.4); background: rgba(93, 206, 138, 0.1); }
+    .card-prompt-refactor .prompt-id { color: var(--refactor); border-color: rgba(201, 162, 39, 0.4); background: rgba(201, 162, 39, 0.1); }
+    .card-prompt-ext .prompt-id { color: var(--ext); border-color: rgba(232, 168, 93, 0.4); background: rgba(232, 168, 93, 0.1); }
+    .card-prompt-spec .prompt-id { color: var(--spec); border-color: rgba(126, 184, 218, 0.4); background: rgba(126, 184, 218, 0.1); }
+
+    .prompt-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin: 0.5rem 0 0.4rem;
+      letter-spacing: 0.02em;
+    }
+    .prompt-label::before { content: "▸ "; color: var(--accent); }
+
+    .card-prompt + .card-prompt { margin-top: 0.5rem; }
+    .card-ref + .card-prompt { margin-top: 1.75rem; }
+    .card-prompt + .card-ref { margin-top: 1.75rem; }
+    .card-prompt pre.prompt {
+      border-color: rgba(91, 159, 212, 0.35);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    }
+
+    .prompt-index {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+      margin: 1rem 0 0;
+    }
+    .prompt-index th,
+    .prompt-index td {
+      border: 1px solid var(--border);
+      padding: 0.4rem 0.55rem;
+      text-align: left;
+    }
+    .prompt-index th { background: #0a0e14; color: var(--accent); }
+    .prompt-index code { font-size: 0.78rem; }
+    .prompt-index a { color: var(--accent); text-decoration: none; }
+    .prompt-index a:hover { text-decoration: underline; }
+
+    /* ── 실행 순서 Playbook ── */
+    .run-order { margin-top: 0; }
+    .run-order > .section-hint { margin-top: 0; }
+    .run-phase {
+      margin: 1.75rem 0 0.75rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem 0.75rem;
+    }
+    .run-phase:first-of-type { margin-top: 0.5rem; }
+    .run-phase .phase-tag {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      letter-spacing: 0.03em;
+    }
+    .phase-main { background: rgba(139, 156, 179, 0.25); color: #c8d4e0; }
+    .phase-spec { background: rgba(126, 184, 218, 0.25); color: var(--spec); }
+    .phase-red { background: rgba(232, 93, 93, 0.25); color: var(--red); }
+    .phase-green { background: rgba(93, 206, 138, 0.25); color: var(--green); }
+    .phase-refactor { background: rgba(201, 162, 39, 0.25); color: var(--refactor); }
+    .phase-ext { background: rgba(232, 168, 93, 0.25); color: var(--ext); }
+    .phase-done { background: rgba(91, 159, 212, 0.2); color: var(--accent); }
+    ol.run-steps {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      counter-reset: runstep;
+    }
+    ol.run-steps > li {
+      counter-increment: runstep;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.35rem 0.65rem;
+      padding: 0.55rem 0.65rem;
+      margin-bottom: 0.35rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.88rem;
+    }
+    ol.run-steps > li::before {
+      content: counter(runstep);
+      flex-shrink: 0;
+      width: 1.6rem;
+      height: 1.6rem;
+      line-height: 1.6rem;
+      text-align: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: #0a0e14;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      color: var(--accent);
+    }
+    ol.run-steps a.run-link {
+      color: var(--accent);
+      font-weight: 600;
+      text-decoration: none;
+      font-family: "Consolas", "D2Coding", monospace;
+      font-size: 0.82rem;
+    }
+    ol.run-steps a.run-link:hover { text-decoration: underline; }
+    ol.run-steps .run-meta {
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+    ol.run-steps .run-arrow {
+      color: var(--muted);
+      font-size: 0.75rem;
+      margin-left: auto;
+    }
+    ol.run-steps li.run-sub {
+      margin-left: 2rem;
+      border-left: 2px solid var(--border);
+      border-radius: 0 8px 8px 0;
+    }
+    ol.run-steps li.run-sub::before {
+      content: "↳";
+      width: auto;
+      height: auto;
+      line-height: inherit;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    a.nav-run {
+      color: #fff !important;
+      background: var(--accent);
+      border-color: var(--accent) !important;
+      font-weight: 600;
+    }
+    a.nav-run:hover { opacity: 0.9; background: var(--accent); }
+
+    /* ── 진행 체크 ── */
+    .prompt-done-wrap {
+      position: absolute;
+      top: 1rem;
+      right: 1.35rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      z-index: 3;
+      user-select: none;
+    }
+    .prompt-done-wrap input[type="checkbox"] {
+      width: 1rem;
+      height: 1rem;
+      margin: 0;
+      accent-color: var(--green);
+      cursor: pointer;
+    }
+    .prompt-done-wrap label {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .card-prompt.prompt-done {
+      border-left-color: var(--green) !important;
+      background: rgba(93, 206, 138, 0.06);
+    }
+    .card-prompt.prompt-done > .card-type { opacity: 0.65; }
+    .card-prompt.prompt-done h3 .prompt-id {
+      text-decoration: line-through;
+      opacity: 0.75;
+    }
+    .run-done-wrap {
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+    .run-done-wrap input[type="checkbox"] {
+      width: 0.9rem;
+      height: 0.9rem;
+      margin: 0;
+      accent-color: var(--green);
+      cursor: pointer;
+    }
+    ol.run-steps > li.run-step-done {
+      border-color: rgba(93, 206, 138, 0.45);
+      background: rgba(93, 206, 138, 0.08);
+    }
+    ol.run-steps > li.run-step-done .run-link {
+      text-decoration: line-through;
+      opacity: 0.75;
+    }
+    .progress-summary {
+      display: inline-block;
+      margin-left: 0.5rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--green);
+    }
+    .progress-reset {
+      margin-left: 0.75rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.15rem 0.45rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .progress-reset:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>UnitConverter 실습 Prompt 모음</h1>
+    <p>
+      출처: D2 프로젝트가이드 PDF · <code>UnitConverter_XX/README.md</code> ·
+      <a href="https://github.com/kznetwork/UnitConverter_1004" style="color:var(--accent)">kznetwork/UnitConverter_1004</a>
+      Prompting/01~06 · Report · PRD v1.0<br>
+      <strong>기본 트랙: Python 3.11+ · pytest · BCE</strong> — GitHub 강사 repo는 C++/Catch2 참고용(별도 표기).
+    </p>
+    <div class="legend">
+      <span class="legend-item"><span class="legend-swatch swatch-ref"></span> <strong>참고</strong> — 표·체크리스트 (복붙 X)</span>
+      <span class="legend-item"><span class="legend-swatch swatch-spec"></span> <strong>Prompt · SPEC</strong> — 명세·설계</span>
+      <span class="legend-item"><span class="legend-swatch swatch-red"></span> <strong>Prompt · RED</strong></span>
+      <span class="legend-item"><span class="legend-swatch swatch-green"></span> <strong>Prompt · GREEN</strong></span>
+      <span class="legend-item"><span class="legend-swatch swatch-refactor"></span> <strong>Prompt · REFACTOR</strong></span>
+      <span class="legend-item"><span class="legend-swatch swatch-ext"></span> <strong>Prompt · EXT</strong></span>
+      <span class="legend-item">☑ <strong>완료</strong> — 진행 체크 (브라우저 localStorage 저장)</span>
+    </div>
+  </header>
+
+  <div class="nav-row">
+    <span class="nav-label">실습 진행</span>
+    <div class="nav-links">
+      <a class="nav-run" href="#run-order">▶ 실행 순서 (Playbook)</a>
+    </div>
+  </div>
+  <div class="nav-row">
+    <span class="nav-label">참고 (표 · 요구사항)</span>
+    <div class="nav-links">
+      <a class="nav-ref" href="#run-order">실행 순서</a>
+      <a class="nav-ref" href="#verify">요구사항 검증</a>
+      <a class="nav-ref" href="#git-ref">Git 브랜치 표</a>
+      <a class="nav-ref" href="#prompt-index">Prompt 목록</a>
+    </div>
+  </div>
+  <div class="nav-row">
+    <span class="nav-label">복붙 Prompt (Copy 버튼)</span>
+    <div class="nav-links">
+      <a class="nav-prompt" href="#git">Git</a>
+      <a class="nav-prompt" href="#s0">세션0</a>
+      <a class="nav-prompt" href="#p1">Phase1</a>
+      <a class="nav-prompt" href="#p2">Phase2</a>
+      <a class="nav-prompt" href="#p3">Phase3</a>
+      <a class="nav-prompt" href="#s3">8계층</a>
+      <a class="nav-prompt" href="#p4">PRD·TC</a>
+      <a class="nav-prompt" href="#red">RED</a>
+      <a class="nav-prompt" href="#green">GREEN</a>
+      <a class="nav-prompt" href="#refactor">REFACTOR</a>
+      <a class="nav-prompt" href="#ext">EXT</a>
+      <a class="nav-prompt" href="#report">Report</a>
+      <a class="nav-prompt" href="#cmd">Command</a>
+      <a class="nav-prompt" href="#common">공통</a>
+    </div>
+  </div>
+
+  <main>
+    <div class="note">
+      <strong>사용법:</strong> Agent 모드 · 프로젝트 루트 · <code>@.cursorrules</code> <code>@docs/PRD.md</code> · 시드 <code>UnitConverter.py</code> 참조.<br>
+      <strong>브랜치 (분기만 · merge 없음 · 만든 브랜치는 유지):</strong>
+      <span class="flow">main → staging → spec → red → green → refactoring → new_features
+  ※ 한 번에 만들지 않음 — 각 Phase 작업 시작 직전에만 GIT-P1~P6 실행</span><br>
+      <strong>카드 구분:</strong> 회색 왼쪽 줄 = <em>참고</em> · 색 왼쪽 줄 + <code>P-xx</code> ID + Copy = <em>복붙 Prompt</em><br>
+      <strong>진행:</strong> <a href="#run-order" style="color:var(--accent)">실행 순서 (Playbook)</a> — 번호대로 링크 클릭 → Copy → Cursor
+    </div>
+
+    <!-- RUN ORDER -->
+    <section id="run-order" class="run-order">
+      <h2>실행 순서 (Playbook) <span class="progress-summary" id="progress-summary" aria-live="polite"></span><button type="button" class="progress-reset" id="progress-reset" title="모든 완료 체크 해제">체크 초기화</button></h2>
+      <p class="section-hint prompt-only">위에서 아래로 순서대로 · 각 Phase 시작 <strong>직전</strong>에 Git Prompt · spec은 <a href="#p4-p4">P4-P4</a>까지 · ☑ 완료는 카드·목록 공통</p>
+
+      <div class="run-phase"><span class="phase-tag phase-main">main</span> S0 · 오리엔테이션</div>
+      <ol class="run-steps">
+        <li><a class="run-link" href="#s0-p1">S0-P1</a> <span class="run-meta">레거시 스멜 · Ask · main</span></li>
+        <li><a class="run-link" href="#s0-p2">S0-P2</a> <span class="run-meta">8h 일정 · C2C · Ask</span></li>
+      </ol>
+
+      <div class="run-phase"><span class="phase-tag phase-spec">spec</span> Git · 명세 Phase 시작</div>
+      <ol class="run-steps">
+        <li><a class="run-link" href="#git-p1">GIT-P1</a> <span class="run-meta">staging 분기 · Agent</span></li>
+        <li><a class="run-link" href="#git-p2">GIT-P2</a> <span class="run-meta">spec 분기 · Agent</span></li>
+      </ol>
+
+      <div class="run-phase"><span class="phase-tag phase-spec">spec</span> Phase 1~2 · 문제·요구 (Ask · 코드 금지)</div>
+      <ol class="run-steps">
+        <li><a class="run-link" href="#p1-p1">P1-P1</a> <span class="run-meta">문제 정의 5 STEP</span></li>
+        <li><a class="run-link" href="#p1-p2">P1-P2</a> <span class="run-meta">Mom Test 10문항</span></li>
+        <li><a class="run-link" href="#p1-p3">P1-P3</a> <span class="run-meta">사용자 여정</span></li>
+        <li><a class="run-link" href="#p2-p1">P2-P1</a> <span class="run-meta">Epic~Gherkin 요구 패키지</span></li>
+        <li><a class="run-link" href="#p2-p2">P2-P2</a> <span class="run-meta">Gherkin 8시나리오</span></li>
+      </ol>
+
+      <div class="run-phase"><span class="phase-tag phase-spec">spec</span> Phase 3 · BCE 설계</div>
+      <ol class="run-steps">
+        <li><a class="run-link" href="#p3-p1">P3-P1</a> <span class="run-meta">Dual-Track + BCE · Ask</span></li>
+      </ol>
+
+      <div class="run-phase"><span class="phase-tag phase-spec">spec</span> 8계층 · Harness · Rule · Skill · Command</div>
+      <ol class="run-steps">
+        <li><a class="run-link" href="#s3-p1">S3-P1</a> <span class="run-meta">Harness 골격 · Agent</span></li>
+        <li><a class="run-link" href="#s3-p2">S3-P2</a> <span class="run-meta">.cursorrules · Agent</span></li>
+        <li><a class="run-link" href="#s3-p3">S3-P3</a> <span class="run-meta">Skill · Agent</span></li>
+        <li><a class="run-link" href="#s3-p4">S3-P4</a> <span class="run-meta">Command 2개 · Agent</span></li>
+        <li class="run-sub"><a class="run-link" href="#cmd-p1">CMD-P1</a> <span class="run-meta">(선택) Command 5개 일괄 — S3-P4 대신/추가</span></li>
+      </ol>
+
+      <div class="run-phase"><span class="phase-tag phase-spec">spec 끝</span> PRD · C2C · TODO</div>
+      <ol class="run-steps">
+        <li><a class="run-link" href="#p4-p1">P4-P1</a> <span class="run-meta">docs/PRD.md · Agent</span></li>
+        <li><a class="run-link" href="#p4-p2">P4-P2</a> <span class="run-meta">RED TC 목록만 · Ask</span></li>
+        <li><a class="run-link" href="#p4-p3">P4-P3</a> <span class="run-meta">C2C 추적 표 · Ask</span></li>
+        <li><a class="run-link" href="#p4-p4">P4-P4</a> <span class="run-meta">docs/TODO.md · Agent</span> <span class="run-arrow">→ spec 완료</span></li>
+      </ol>
+
+      <div class="run-phase"><span class="phase-tag phase-red">red</span> RED · pytest FAIL</div>
+      <ol class="run-steps">
+        <li><a class="run-link" href="#git-p3">GIT-P3</a> <span class="run-meta">red 분기 · Agent</span></li>
+        <li><a class="run-link" href="#red-p1">RED-P1</a> <span class="run-meta">D-CNV-01 설계표 · Ask</span></li>
+        <li><a class="run-link" href="#red-p2">RED-P2</a> <span class="run-meta">U-IN 설계 · Ask</span></li>
+        <li><a class="run-link" href="#red-p3">RED-P3</a> <span class="run-meta">D-CNV-01 스켈레톤 · Agent</span></li>
+        <li><a class="run-link" href="#red-p4">RED-P4</a> <span class="run-meta">U-OUT-01 스켈레톤 · Agent</span></li>
+      </ol>
+
+      <div class="run-phase"><span class="phase-tag phase-green">green</span> GREEN · pytest PASS</div>
+      <ol class="run-steps">
+        <li><a class="run-link" href="#git-p4">GIT-P4</a> <span class="run-meta">green 분기 · Agent</span></li>
+        <li><a class="run-link" href="#grn-p1">GRN-P1</a> <span class="run-meta">D-CNV-01 최소 구현</span></li>
+        <li><a class="run-link" href="#grn-p2">GRN-P2</a> <span class="run-meta">D-CNV-02/03</span></li>
+        <li><a class="run-link" href="#grn-p3">GRN-P3</a> <span class="run-meta">U-IN + CLI Boundary</span></li>
+        <li><a class="run-link" href="#grn-p4">GRN-P4</a> <span class="run-meta">Golden Master · U-OUT-01</span></li>
+      </ol>
+
+      <div class="run-phase"><span class="phase-tag phase-refactor">refactoring</span> REFACTOR · PASS 유지</div>
+      <ol class="run-steps">
+        <li><a class="run-link" href="#git-p5">GIT-P5</a> <span class="run-meta">refactoring 분기 · Agent</span></li>
+        <li><a class="run-link" href="#ref-p1">REF-P1</a> <span class="run-meta">스멜 · GitHub Issue · Ask</span></li>
+        <li><a class="run-link" href="#ref-p2">REF-P2</a> <span class="run-meta">safe 리팩터 · Issue resolve · Agent</span></li>
+      </ol>
+
+      <div class="run-phase"><span class="phase-tag phase-ext">new_features</span> REFACTOR 후 · PyQt GUI (EXT-04)</div>
+      <ol class="run-steps">
+        <li><a class="run-link" href="#git-p6">GIT-P6</a> <span class="run-meta">new_features 분기 · Agent</span></li>
+        <li><a class="run-link" href="#ext-p4">EXT-P4</a> <span class="run-meta">U-GUI-01 RED 설계 · Ask</span></li>
+        <li><a class="run-link" href="#ext-p5">EXT-P5</a> <span class="run-meta">PyQt GREEN · Agent</span></li>
+      </ol>
+
+      <div class="run-phase"><span class="phase-tag phase-ext">new_features</span> EXT · 선택 (시간 있으면)</div>
+      <ol class="run-steps">
+        <li><a class="run-link" href="#ext-p1">EXT-P1</a> <span class="run-meta">units.json EXT-01</span></li>
+        <li><a class="run-link" href="#ext-p2">EXT-P2</a> <span class="run-meta">cubit EXT-02</span></li>
+        <li><a class="run-link" href="#ext-p3">EXT-P3</a> <span class="run-meta">--format EXT-03</span></li>
+      </ol>
+
+      <div class="run-phase"><span class="phase-tag phase-done">마무리</span> Report · 점검 · 리뷰</div>
+      <ol class="run-steps">
+        <li><a class="run-link" href="#rpt-p1">RPT-P1</a> <span class="run-meta">Report 5종 · Agent</span></li>
+        <li><a class="run-link" href="#rpt-p2">RPT-P2</a> <span class="run-meta">Transcript Export</span></li>
+        <li><a class="run-link" href="#com-p1">COM-P1</a> <span class="run-meta">8계층 점검 · Ask</span></li>
+        <li><a class="run-link" href="#rpt-p3">RPT-P3</a> <span class="run-meta">팀 리뷰 15:40 체크 · Ask</span></li>
+        <li class="run-sub"><a class="run-link" href="#git-p7">GIT-P7</a> <span class="run-meta">(수시) 브랜치 점검</span></li>
+        <li class="run-sub"><a class="run-link" href="#git-p8">GIT-P8</a> <span class="run-meta">(리뷰 후) 피드백 반영</span></li>
+        <li class="run-sub"><a class="run-link" href="#com-p2">COM-P2</a> <span class="run-meta">(요청 시) commit</span></li>
+        <li class="run-sub"><a class="run-link" href="#cmd-p2">CMD-P2</a> <span class="run-meta">(선택) C++ Catch2 트랙</span></li>
+      </ol>
+
+      <p class="desc" style="margin-top:1rem;">참고만(복붙 X): <a href="#verify" style="color:var(--accent)">요구사항 검증 표</a> · <a href="#git-ref" style="color:var(--accent)">Git 브랜치 정책</a></p>
+    </section>
+
+    <section id="prompt-index">
+      <h2>Prompt 빠른 목록</h2>
+      <p class="section-hint">아래 ID를 검색(Ctrl+F)하거나 링크로 이동. Copy 버튼은 Prompt 카드에만 있습니다.</p>
+      <table class="prompt-index">
+        <thead><tr><th>ID</th><th>제목</th><th>브랜치</th><th>모드</th></tr></thead>
+        <tbody>
+          <tr><td><code>GIT-P1</code></td><td><a href="#git-p1">staging — 명세 Phase 시작 직전</a></td><td>staging</td><td>Agent</td></tr>
+          <tr><td><code>GIT-P2</code></td><td><a href="#git-p2">spec — PRD·8계층 시작 직전</a></td><td>spec</td><td>Agent</td></tr>
+          <tr><td><code>GIT-P3</code></td><td><a href="#git-p3">red — RED 작업 시작 직전</a></td><td>red</td><td>Agent</td></tr>
+          <tr><td><code>GIT-P4</code></td><td><a href="#git-p4">green — GREEN 작업 시작 직전</a></td><td>green</td><td>Agent</td></tr>
+          <tr><td><code>GIT-P5</code></td><td><a href="#git-p5">refactoring — REFACTOR 시작 직전</a></td><td>refactoring</td><td>Agent</td></tr>
+          <tr><td><code>GIT-P6</code></td><td><a href="#git-p6">new_features — EXT 시작 직전</a></td><td>new_features</td><td>Agent</td></tr>
+          <tr><td><code>GIT-P7</code></td><td><a href="#git-p7">현재 Phase 브랜치 점검</a></td><td>현재</td><td>Agent</td></tr>
+          <tr><td><code>GIT-P8</code></td><td><a href="#git-p8">팀 리뷰 피드백 반영</a></td><td>해당 Phase</td><td>Agent</td></tr>
+          <tr><td><code>S0-P1</code></td><td><a href="#s0-p1">레거시 스멜 분석</a></td><td>main</td><td>Ask</td></tr>
+          <tr><td><code>S0-P2</code></td><td><a href="#s0-p2">8시간 일정 · C2C</a></td><td>—</td><td>Ask</td></tr>
+          <tr><td><code>P1-P1~P3</code></td><td><a href="#p1">문제정의 · Mom · 여정</a></td><td>spec</td><td>Ask</td></tr>
+          <tr><td><code>P2-P1~P2</code></td><td><a href="#p2">요구 패키지 · Gherkin</a></td><td>spec</td><td>Ask/SPEC</td></tr>
+          <tr><td><code>P3-P1</code></td><td><a href="#p3-p1">BCE 설계</a></td><td>spec</td><td>SPEC</td></tr>
+          <tr><td><code>S3-P1~P4</code></td><td><a href="#s3">Harness · Rule · Skill · Command</a></td><td>spec</td><td>Agent</td></tr>
+          <tr><td><code>P4-P1~P4</code></td><td><a href="#p4">PRD · TC목록 · C2C · TODO</a></td><td>spec</td><td>Agent/Ask</td></tr>
+          <tr><td><code>RED-P1~P4</code></td><td><a href="#red">RED 설계 · 스켈레톤</a></td><td>red</td><td>Ask/Agent</td></tr>
+          <tr><td><code>GRN-P1~P4</code></td><td><a href="#green">GREEN · Golden Master</a></td><td>green</td><td>Agent</td></tr>
+          <tr><td><code>REF-P1~P2</code></td><td><a href="#refactor">스멜 · safe 리팩터</a></td><td>refactoring</td><td>Ask/Agent</td></tr>
+          <tr><td><code>EXT-P4~P5</code></td><td><a href="#ext-p4">PyQt GUI (REFACTOR 후)</a></td><td>new_features</td><td>Ask/Agent</td></tr>
+          <tr><td><code>EXT-P1~P3</code></td><td><a href="#ext">EXT-01~03 (선택)</a></td><td>new_features</td><td>Agent</td></tr>
+          <tr><td><code>RPT-P1~P3</code></td><td><a href="#report">Report · 리뷰 체크</a></td><td>—</td><td>Agent/Ask</td></tr>
+          <tr><td><code>CMD-P1~P2</code></td><td><a href="#cmd">Command · C++ 선택</a></td><td>—</td><td>Agent</td></tr>
+          <tr><td><code>COM-P1~P2</code></td><td><a href="#common">8계층 점검 · commit</a></td><td>—</td><td>Ask</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- REQUIREMENTS VERIFICATION -->
+    <section id="verify">
+      <h2>요구사항 검증 (SSOT 대조)</h2>
+      <p class="section-hint">📖 <strong>참고 전용</strong> — 아래 카드는 표·체크리스트입니다. Copy 버튼 없음. Prompt는 <a href="#prompt-index">Prompt 목록</a> 참고.</p>
+
+      <div class="card card-ref">
+        <span class="card-type">참고 · 표</span>
+        <h3>프로그램 정의 (공통 — 세 소스 일치)</h3>
+        <table class="branch">
+          <thead><tr><th>항목</th><th>확인 내용</th><th>출처</th></tr></thead>
+          <tbody>
+            <tr><td>입력</td><td><code>{unit}:{value}</code> 한 줄 (예: <code>meter:2.5</code>)</td><td>PDF FR-01 · README · PRD F-01</td></tr>
+            <tr><td>출력</td><td>등록된 <strong>모든</strong> 단위로 변환 결과 출력</td><td>PDF FR-02 · README · PRD F-03</td></tr>
+            <tr><td>기준 허브</td><td><strong>meter</strong> — feet/yard는 meter 경유</td><td>README · PRD §5.1</td></tr>
+            <tr><td>비율</td><td>1 m = 3.28084 ft · 1 m = 1.09361 yd<br>Domain: feet=0.3048 m/unit, yard=0.9144 m/unit</td><td>README · PRD Background</td></tr>
+            <tr><td>표시 예</td><td><code>meter:2.5</code> → feet <strong>8.2</strong>, yard <strong>2.7</strong> (소수 1자리, Boundary)</td><td>README · PRD RG-04 · AC-01</td></tr>
+            <tr><td>Domain 정밀도</td><td>2.5 m → 8.20210 ft (5자리) — <strong>표시 반올림과 분리</strong></td><td>PDF D-CNV-02 · PRD (Domain ε)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card card-ref">
+        <span class="card-type">참고 · P0</span>
+        <h3>P0 필수 (PDF FR/NFR ↔ PRD F-01~05)</h3>
+        <table class="branch">
+          <thead><tr><th>ID</th><th>요구</th><th>검증</th></tr></thead>
+          <tbody>
+            <tr><td><strong>FR-01</strong></td><td>입력 파싱 <code>meter:2.5</code> → unit, value</td><td class="ok">✓ U-IN·D-CNV 선행</td></tr>
+            <tr><td><strong>FR-02</strong></td><td>전 단위 출력 (meter/feet/yard)</td><td class="ok">✓ U-OUT-01 · D-CNV-02/03</td></tr>
+            <tr><td><strong>FR-03</strong></td><td>미등록 단위 <code>cubit:1</code> → 명확한 오류</td><td class="ok">✓ PRD E004 Unknown unit</td></tr>
+            <tr><td><strong>FR-04</strong></td><td>음수 거부 <code>meter:-1</code></td><td class="ok">✓ PRD E003 · PDF U-IN-03</td></tr>
+            <tr><td><strong>FR-05</strong></td><td>형식 오류 <code>meter</code> / <code>abc</code></td><td class="ok">✓ PRD E001/E002 · U-IN-01/02</td></tr>
+            <tr><td><strong>NFR-01 OCP</strong></td><td>inch 등 신규 단위 — Converter core diff 0</td><td class="ok">✓ PRD G-05 · cubit 등록 시나리오</td></tr>
+            <tr><td><strong>NFR-02 SRP</strong></td><td>Parser / Registry / Converter / Formatter 분리</td><td class="ok">✓ BCE + PRD §4.2</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card card-ref">
+        <span class="card-type">참고 · P1</span>
+        <h3>P1 확장 (PDF EXT ↔ PRD F-06~08)</h3>
+        <table class="branch">
+          <thead><tr><th>ID</th><th>요구</th><th>브랜치</th></tr></thead>
+          <tbody>
+            <tr><td><strong>EXT-01</strong></td><td><code>units.json</code> (또는 YAML) 비율 로드</td><td><code>new_features</code></td></tr>
+            <tr><td><strong>EXT-02</strong></td><td>동적 등록 <code>1 cubit = 0.4572 meter</code></td><td><code>new_features</code></td></tr>
+            <tr><td><strong>EXT-03</strong></td><td><code>--format json|csv|table</code></td><td><code>new_features</code></td></tr>
+            <tr><td><strong>EXT-04</strong></td><td>PyQt GUI — unit/value · Convert · 결과 표시 (Control 재사용)</td><td><code>new_features</code> · <strong>REFACTOR 후</strong></td></tr>
+          </tbody>
+        </table>
+        <p class="desc">PDF 설정 예: <code>{ "meter": 1.0, "feet": 3.28084, "yard": 1.09361 }</code><br>
+        PRD JSON schema는 <code>metersPerUnit</code> 객체 배열 — <strong>팀 PRD에서 하나로 고정</strong> 후 테스트 ID에 반영.</p>
+      </div>
+
+      <div class="card card-ref">
+        <span class="card-type">참고 · Test ID</span>
+        <h3>Dual-Track 테스트 ID (PDF — Python pytest)</h3>
+        <table class="branch">
+          <thead><tr><th>Track</th><th>Test ID</th><th>검증 내용</th></tr></thead>
+          <tbody>
+            <tr><td rowspan="3">A Boundary</td><td>U-IN-01</td><td>빈 입력 → 형식 오류</td></tr>
+            <tr><td>U-IN-02</td><td><code>meter</code> (콜론 없음) → 형식 오류</td></tr>
+            <tr><td>U-IN-03</td><td><code>meter:-1</code> → 음수 거부</td></tr>
+            <tr><td>Boundary</td><td>U-OUT-01</td><td><code>meter:2.5</code> → 3줄 이상 출력</td></tr>
+            <tr><td>Boundary</td><td>U-GUI-01</td><td>PyQt · meter 2.5 → feet 8.2 / yard 2.7 표시 (EXT-04)</td></tr>
+            <tr><td rowspan="3">B Domain</td><td>D-CNV-01</td><td>1 feet → 0.3048 m (±ε)</td></tr>
+            <tr><td>D-CNV-02</td><td>2.5 m → 8.20210 ft</td></tr>
+            <tr><td>D-CNV-03</td><td>feet↔yard meter 경유 일치</td></tr>
+            <tr><td>Domain</td><td>D-REG-01</td><td>cubit 0.4572 등록 후 변환</td></tr>
+            <tr><td>Data</td><td>D-CFG-01</td><td>깨진 json → ConfigError</td></tr>
+          </tbody>
+        </table>
+        <p class="desc warn">GitHub 강사 repo: <code>DT-*</code>(Domain 17) · <code>BT-*</code>(Boundary 11) · Catch2 — ID 체계만 다름, 역할 동일.</p>
+      </div>
+
+      <div class="card card-ref">
+        <span class="card-type">참고 · PDF vs GitHub</span>
+        <h3>의도적 차이 (혼동 금지)</h3>
+        <table class="branch">
+          <thead><tr><th>항목</th><th>D2 PDF (오늘)</th><th>GitHub UnitConverter_1004</th></tr></thead>
+          <tbody>
+            <tr><td>언어</td><td><strong>Python</strong></td><td>C++17</td></tr>
+            <tr><td>테스트</td><td><strong>pytest</strong></td><td>Catch2</td></tr>
+            <tr><td>명세 브랜치</td><td><strong>staging + spec</strong> (2단 분기) · PDF는 <code>staging-spec</code> 합친 이름</td><td><code>spec</code></td></tr>
+            <tr><td>아키텍처 명</td><td>BCE (+ Data)</td><td>BCE (동일)</td></tr>
+            <tr><td>에러</td><td>print / 예외 (팀 PRD에서 고정)</td><td>E001~E008 + exit code + stderr</td></tr>
+            <tr><td>세션 수</td><td>8h 1일 (6 Activities)</td><td>Phase 1~5 + Prompting 6파일</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card card-ref">
+        <span class="card-type">참고 · 레거시</span>
+        <h3>레거시 시드가 깨는 규칙 (37줄 UnitConverter.py)</h3>
+        <p class="desc">
+          · 단위마다 if/elif → <strong>OCP 위반</strong><br>
+          · 3.28084 / 1.09361 하드코딩 → <strong>설정 외부화 필요</strong><br>
+          · main()에 파싱+변환+출력 → <strong>SRP 위반</strong><br>
+          · 음수·형식·미지 단위 검증 없음 → FR-03~05 미충족<br>
+          · <code>meter:2.5:extra</code> 등 경계 케이스 미처리
+        </p>
+      </div>
+    </section>
+
+    <!-- GIT -->
+    <section id="git">
+      <h2>Git 브랜치 — Prompt</h2>
+      <p class="section-hint prompt-only">브랜치는 <strong>각 Phase 작업 시작 직전</strong>에만 생성 (<a href="#git-ref">정책 표</a>) · 아래 <strong>복붙 Prompt</strong>만 Cursor에 사용.</p>
+
+      <div class="card card-ref" id="git-ref">
+        <span class="card-type">참고 · Git</span>
+        <h3>브랜치 정책 (워크북 · 수업 운영)</h3>
+        <p class="desc">
+          · <strong>작업 시작 직전에만 분기</strong> — 다음 Phase 들어가기 <em>바로 전</em>에 해당 GIT-P 실행 · <strong>미리 일괄 생성하지 않음</strong><br>
+          · <strong>분기(복사)만</strong> — <code>git checkout -b</code> · 부모 브랜치 시점에서 새 브랜치<br>
+          · <strong>수업 중 merge 안 함</strong> — 만든 브랜치는 <strong>삭제하지 않고 유지</strong><br>
+          · <strong>정책 변경</strong> — 중간에 브랜치 규칙이 바뀔 수 있음 → 그때까지는 <strong>필요한 브랜치만</strong> 생성<br>
+          · <strong>리뷰·수정</strong> — 피드백은 해당 Phase 브랜치 checkout 후 commit (<a href="#git-p8">GIT-P8</a>)<br>
+          · <strong>commit</strong> — 사용자 채팅 요청 시만 (Rule · Hook)<br>
+          · <strong>RED(<code>red</code>)</strong> — pytest FAIL · merge 대상 아님
+        </p>
+        <h3>작업 시작 시 — 어떤 GIT-P를 먼저?</h3>
+        <table class="branch">
+          <thead>
+            <tr><th>작업 시작</th><th>직전 Prompt</th><th>작업 브랜치</th><th>이어서</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>S0 레거시 분석</td><td>— (main 그대로)</td><td><code>main</code></td><td><a href="#s0">S0-P*</a></td></tr>
+            <tr><td>명세·PRD·8계층</td><td><a href="#git-p1">GIT-P1</a> → <a href="#git-p2">GIT-P2</a></td><td><code>spec</code></td><td><a href="#p1">P1~P4</a>, <a href="#s3">S3</a></td></tr>
+            <tr><td>RED 설계·스켈레톤</td><td><a href="#git-p3">GIT-P3</a></td><td><code>red</code></td><td><a href="#red">RED-P*</a></td></tr>
+            <tr><td>GREEN 최소 구현</td><td><a href="#git-p4">GIT-P4</a></td><td><code>green</code></td><td><a href="#green">GRN-P*</a></td></tr>
+            <tr><td>REFACTOR</td><td><a href="#git-p5">GIT-P5</a></td><td><code>refactoring</code></td><td><a href="#refactor">REF-P*</a></td></tr>
+            <tr><td>EXT 확장</td><td><a href="#git-p6">GIT-P6</a></td><td><code>new_features</code></td><td><a href="#ext">EXT-P*</a></td></tr>
+          </tbody>
+        </table>
+        <h3>브랜치 ↔ Phase ↔ 산출물</h3>
+        <table class="branch">
+          <thead>
+            <tr><th>브랜치</th><th>만드는 시점</th><th>부모</th><th>ARRR</th><th>하는 일</th><th>pytest</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>main</code></td>
+              <td>프로젝트 초기</td>
+              <td>—</td>
+              <td>—</td>
+              <td>시드 · 레거시 분석(S0)</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td><code>staging</code></td>
+              <td>명세 Phase <strong>직전</strong></td>
+              <td><code>main</code></td>
+              <td>—</td>
+              <td>상위 작업층</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td><code>spec</code></td>
+              <td>PRD·8계층 <strong>직전</strong></td>
+              <td><code>staging</code></td>
+              <td>Ask (명세)</td>
+              <td>PRD · BCE · 8계층 · C2C</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td><code>red</code></td>
+              <td>RED <strong>직전</strong></td>
+              <td><code>spec</code></td>
+              <td>Ask / RED</td>
+              <td>RED 설계 · pytest 스켈레톤</td>
+              <td><strong>FAIL</strong></td>
+            </tr>
+            <tr>
+              <td><code>green</code></td>
+              <td>GREEN <strong>직전</strong></td>
+              <td><code>red</code></td>
+              <td>Respond / GREEN</td>
+              <td>최소 구현 · Domain TC</td>
+              <td><strong>PASS</strong></td>
+            </tr>
+            <tr>
+              <td><code>refactoring</code></td>
+              <td>REFACTOR <strong>직전</strong></td>
+              <td><code>green</code></td>
+              <td>Refine</td>
+              <td>스멜 제거 · OCP/SRP</td>
+              <td><strong>PASS 유지</strong></td>
+            </tr>
+            <tr>
+              <td><code>new_features</code></td>
+              <td>EXT <strong>직전</strong></td>
+              <td><code>refactoring</code></td>
+              <td>Repeat</td>
+              <td>EXT-04 GUI · EXT-01~03(선택) · Boundary TC</td>
+              <td>확장 TC GREEN</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="flow">main ──(명세 시작 직전)──► staging ──(PRD 시작 직전)──► spec
+                              ──(RED 직전)──► red ──(GREEN 직전)──► green
+                              ──(REFACTOR 직전)──► refactoring ──(EXT 직전)──► new_features
+
+※ 각 화살표 = 그 Phase 들어가기 직전에만 checkout -b · merge 없음 · 만든 브랜치는 유지</p>
+      </div>
+
+      <div class="card card-prompt card-prompt-spec" id="git-p1">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">GIT-P1</span> staging — 명세 Phase 시작 직전</h3>
+        <div class="meta"><span class="tag tag-git">Agent</span><span class="tag tag-git">staging</span></div>
+        <p class="desc"><strong>PRD·설계 들어가기 직전</strong>에만 실행. S0(main) 끝난 뒤 · merge·commit 금지.</p>
+        <div class="prompt-label">Cursor Agent에 붙여넣기</div>
+        <pre class="prompt">명세 Phase를 시작한다. staging 브랜치만 지금 준비해줘.
+- git checkout main
+- git checkout -b staging   (이미 있으면 checkout staging만 — 앞으로 만들 브랜치는 지금 만들지 마)
+- merge·삭제·commit 금지
+- 다음: GIT-P2(spec)는 PRD·8계층 들어가기 직전에 실행
+보고: git branch, git branch --show-current</pre>
+      </div>
+
+      <div class="card card-prompt card-prompt-spec" id="git-p2">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">GIT-P2</span> spec — PRD·8계층 시작 직전</h3>
+        <div class="meta"><span class="tag tag-spec">SPEC</span><span class="tag tag-git">Agent</span><span class="tag tag-git">spec</span></div>
+        <p class="desc"><strong>P1~P4·S3 작업 직전</strong>에만 실행. staging은 GIT-P1으로 이미 있어야 함.</p>
+        <div class="prompt-label">Cursor Agent에 붙여넣기</div>
+        <pre class="prompt">PRD·BCE·8계층 작업을 시작한다. spec 브랜치만 지금 준비해줘.
+- git checkout staging
+- git checkout -b spec   (이미 있으면 checkout spec만)
+- merge·삭제·commit 금지
+- red/green 등 이후 브랜치는 지금 만들지 마
+- 이어서 P1~P4·S3 Prompt 실행
+보고: git branch, git branch --show-current</pre>
+      </div>
+
+      <div class="card card-prompt card-prompt-red" id="git-p3">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">GIT-P3</span> red — RED 작업 시작 직전</h3>
+        <div class="meta"><span class="tag tag-red">RED</span><span class="tag tag-git">Agent</span><span class="tag tag-git">red</span></div>
+        <p class="desc"><strong>RED-P* 실행 직전</strong>에만. spec 설계·PRD 완료 후.</p>
+        <div class="prompt-label">Cursor Agent에 붙여넣기</div>
+        <pre class="prompt">RED 단계를 시작한다. red 브랜치만 지금 준비해줘.
+- git checkout spec
+- git checkout -b red   (이미 있으면 checkout red만)
+- green/refactoring 등은 지금 만들지 마
+- tests/·src/ 구현은 아직 하지 마
+- merge·삭제·commit 금지
+- 이어서 RED-P* Prompt 실행
+보고: git branch, git branch --show-current, git status -sb</pre>
+      </div>
+
+      <div class="card card-prompt card-prompt-green" id="git-p4">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">GIT-P4</span> green — GREEN 작업 시작 직전</h3>
+        <div class="meta"><span class="tag tag-green">GREEN</span><span class="tag tag-git">Agent</span><span class="tag tag-git">green</span></div>
+        <p class="desc"><strong>GRN-P* 실행 직전</strong> · Domain RED pytest FAIL 확인 후.</p>
+        <div class="prompt-label">Cursor Agent에 붙여넣기</div>
+        <pre class="prompt">GREEN 단계를 시작한다. Domain RED(D-CNV-01) pytest FAIL 확인됨.
+green 브랜치만 지금 준비해줘:
+- git checkout red
+- git checkout -b green   (이미 있으면 checkout green만)
+- refactoring/new_features는 지금 만들지 마
+- src/ 구현·commit은 아직 하지 마
+- merge·삭제·commit 금지
+- 이어서 GRN-P* Prompt 실행
+보고: git branch, 이전→현재 브랜치, git status -sb</pre>
+      </div>
+
+      <div class="card card-prompt card-prompt-refactor" id="git-p5">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">GIT-P5</span> refactoring — REFACTOR 시작 직전</h3>
+        <div class="meta"><span class="tag tag-refactor">REFACTOR</span><span class="tag tag-git">Agent</span><span class="tag tag-git">refactoring</span></div>
+        <p class="desc"><strong>REF-P* 실행 직전</strong> · Domain pytest PASS 후.</p>
+        <div class="prompt-label">Cursor Agent에 붙여넣기</div>
+        <pre class="prompt">REFACTOR 단계를 시작한다. Domain 테스트 PASS 확인됨.
+refactoring 브랜치만 지금 준비해줘:
+- git checkout green
+- git checkout -b refactoring   (이미 있으면 checkout refactoring만)
+- new_features는 지금 만들지 마
+- 코드 수정·merge·commit 하지 마
+- 이어서 REF-P* Prompt 실행
+보고: git branch, git branch --show-current, pytest tests/domain/ -q</pre>
+      </div>
+
+      <div class="card card-prompt card-prompt-ext" id="git-p6">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">GIT-P6</span> new_features — EXT 시작 직전</h3>
+        <div class="meta"><span class="tag tag-ext">EXT</span><span class="tag tag-git">Agent</span><span class="tag tag-git">new_features</span></div>
+        <p class="desc"><strong>EXT-P4 실행 직전</strong> · GREEN+GM+REFACTOR 완료 후 · 부모 <code>refactoring</code>.</p>
+        <div class="prompt-label">Cursor Agent에 붙여넣기</div>
+        <pre class="prompt">EXT 단계를 시작한다. P0(Domain GREEN + GRN-P4 GM + REF-P2) 완료됨.
+new_features 브랜치만 지금 준비해줘:
+- git checkout refactoring
+- git checkout -b new_features   (이미 있으면 checkout new_features만)
+- EXT 구현·merge·commit은 아직 하지 마
+- 이어서 EXT-P4(GUI) → EXT-P5 Prompt 실행 (EXT-P1~P3는 선택)
+보고: git branch, git branch --show-current, git status -sb</pre>
+      </div>
+
+      <div class="card card-prompt card-prompt-neutral" id="git-p7">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">GIT-P7</span> 현재 Phase 브랜치 점검</h3>
+        <div class="meta"><span class="tag tag-git">Agent</span></div>
+        <p class="desc">작업 중 헷갈릴 때 · merge·코드 수정 없음 · 아직 안 만든 브랜치는 없어도 정상.</p>
+        <div class="prompt-label">Cursor Agent에 붙여넣기</div>
+        <pre class="prompt">UnitConverter git 브랜치 점검만. merge·코드 수정·새 브랜치 생성 금지.
+
+1. git branch --show-current  → 지금 하려는 Phase와 일치?
+2. git branch  → 존재하는 브랜치 목록 (아직 안 만든 Phase 브랜치는 없어도 됨)
+3. git status -sb
+4. 현재 Phase에 맞는 pytest (red=FAIL, green/refactor=PASS 등)
+
+표: 현재 브랜치 | 기대 Phase | pytest | 다음에 필요하면 GIT-P?</pre>
+      </div>
+
+      <div class="card card-prompt card-prompt-neutral" id="git-p8">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">GIT-P8</span> 팀 리뷰 피드백 반영</h3>
+        <div class="meta"><span class="tag tag-git">Agent</span><span class="tag tag-git">리뷰</span></div>
+        <p class="desc">리뷰 받은 Phase 브랜치에서만 수정 · merge 안 함.</p>
+        <div class="prompt-label">Cursor Agent에 붙여넣기</div>
+        <pre class="prompt">팀 리뷰 피드백을 반영해줘. merge·브랜치 삭제 금지.
+
+리뷰 대상 Phase: [spec | red | green | refactoring | new_features]
+피드백 요약: [여기에 붙여넣기]
+
+1. git checkout [해당 브랜치]
+2. 피드백만 반영 (Phase 규칙 유지: red=FAIL 유지, green/refactor=PASS 유지)
+3. pytest 해당 범위 실행
+4. 사용자가 "커밋해줘"라고 요청할 때만 git commit
+
+보고: 브랜치명 · 변경 파일 · pytest 결과</pre>
+      </div>
+    </section>
+
+    <!-- SESSION 0 -->
+    <section id="s0">
+      <h2>세션 0 — 레거시 분석 · 오리엔테이션 (0.5h)</h2>
+      <p class="section-hint prompt-only">브랜치: <code>main</code> · 모드: <strong>Ask</strong> · 명세 시작 전 <a href="#git-p1">GIT-P1</a>→<a href="#git-p2">GIT-P2</a></p>
+
+      <div class="card card-prompt card-prompt-neutral" id="s0-p1">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">S0-P1</span> 레거시 코드 스멜 분석</h3>
+        <div class="meta"><span class="tag tag-ask">Ask</span></div>
+        <p class="desc">@UnitConverter.py · @README.md · 코드 수정 금지.</p>
+        <div class="prompt-label">Cursor Ask에 붙여넣기</div>
+        <pre class="prompt">UnitConverter.py (37줄 레거시)와 README 기본 요구사항을 분석해줘. 코드 수정 금지.
+
+1) 현재 구조 (입력→처리→출력) 한 줄 흐름
+2) OCP/SRP 위반 지점 표 (위치 · 근거 · FR/NFR 연결)
+3) FR-01~05 중 레거시가 충족/미충족 체크
+4) meter:2.5 실행 시 실제 출력 vs README 기대(8.2 feet, 2.7 yard) 차이
+5) 리팩터링 후 BCE 레이어 후보 (Parser/Registry/Converter/Formatter/CLI)
+6) 다음 단계: spec 브랜치(GIT-P2 후)에서 PRD 초안 작성</pre>
+      </div>
+
+      <div class="card card-prompt card-prompt-neutral" id="s0-p2">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">S0-P2</span> 8시간 일정 · C2C 목표</h3>
+        <div class="meta"><span class="tag tag-ask">Ask</span></div>
+        <div class="prompt-label">Cursor Ask에 붙여넣기</div>
+        <pre class="prompt">UnitConverter D2 과제 8시간 일정을 C2C 관점으로 정리해줘.
+README Activities 6단계(0.5+2+0.5+2+1h) 기준:
+| 시간 | Activity | ARRR | 산출물 | pytest |
+코드 작성 금지. 팀 리뷰(15:40) 전 필수: Domain TC GREEN / Boundary TC는 오후 EXT와 함께 가능.</pre>
+      </div>
+    </section>
+
+    <!-- PHASE 1 -->
+    <section id="p1">
+      <h2>Phase 1 — 문제정의 · 사용자여정</h2>
+      <p class="section-hint prompt-only">브랜치: <code>spec</code> · 시작 직전 <a href="#git-p1">GIT-P1</a>→<a href="#git-p2">GIT-P2</a> · <strong>Ask</strong> · 코드 금지</p>
+
+      <div class="card card-prompt card-prompt-spec" id="p1-p1">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">P1-P1</span> 문제 정의 (5 STEP)</h3>
+        <div class="meta"><span class="tag tag-ask">Ask</span><span class="tag tag-spec">SPEC</span></div>
+        <div class="prompt-label">Cursor Ask에 붙여넣기</div>
+        <pre class="prompt">당신은 문제 정의 전문가입니다.
+워크스페이스: UnitConverter_번호 (Python CLI, pytest, BCE)
+⚠️ 코드·클래스·알고리즘 작성 금지.
+
+STEP 1 — Observation: meter/feet/yard 변환 + OCP/SRP + 설정 외부화 + 동적 등록 + 출력 포맷이 왜 학습 맥락인가?
+STEP 2~4 — Why 3단 (정확한 변환 / 프로그램+테스트 / 계약 먼저 고정)
+STEP 5 — 표면 문제 · 개선 정의 · Invariant 5개(측정 가능) · 훈련 사고능력 3개
+
+출력: Markdown만. @UnitConverter.py 레거시 관찰 1문단 포함.</pre>
+      </div>
+
+      <div class="card card-prompt card-prompt-spec" id="p1-p2">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">P1-P2</span> Mom Test 질문 10개</h3>
+        <div class="meta"><span class="tag tag-ask">Ask</span></div>
+        <div class="prompt-label">Cursor Ask에 붙여넣기</div>
+        <pre class="prompt">UnitConverter 과제를 Mom Test 관점에서 준비한다.
+과거 구체 경험·실제 행동·시간/리스크 연결 질문 10개.
+기능 나열형 질문 금지.
+마지막: "진짜 위험 가정" 3 bullet.
+구현·코드 금지.</pre>
+      </div>
+
+      <div class="card card-prompt card-prompt-spec" id="p1-p3">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">P1-P3</span> 사용자 여정 스토리보드</h3>
+        <div class="meta"><span class="tag tag-ask">Ask</span></div>
+        <div class="prompt-label">Cursor Ask에 붙여넣기</div>
+        <pre class="prompt">사용자 여정 스토리보드.
+Stage: Awareness / Entry / Action / Validation / Outcome
+각 Stage: Action, Thinking, Emotion, Pain, Opportunity 1줄+
+목표: 알고리즘이 아닌 계약·테스트·레이어 분리 학습 명시.
+코드 금지.</pre>
+      </div>
+    </section>
+
+    <!-- PHASE 2 -->
+    <section id="p2">
+      <h2>Phase 2 — 요구사항 분석</h2>
+      <p class="section-hint prompt-only">브랜치: <code>spec</code> · 시작 직전 <a href="#git-p2">GIT-P2</a></p>
+
+      <div class="card card-prompt card-prompt-spec" id="p2-p1">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">P2-P1</span> 요구사항 서술 패키지 (Epic ~ Level 5)</h3>
+        <div class="meta"><span class="tag tag-spec">SPEC</span></div>
+        <div class="prompt-label">Cursor Ask/Agent에 붙여넣기</div>
+        <pre class="prompt">UnitConverter_번호 요구사항 서술 패키지. 구현·코드 금지.
+
+Level 1 Epic: "확장 가능한 Python 단위 변환 CLI" — 목적 4줄, 측정 가능 성공 기준
+Level 2 User Journey 1개 (5~7단계, Pain/Opportunity)
+Level 3 User Stories 최소 6개:
+  - 입력 검증 (FR-03~05 → U-IN-*)
+  - 레지스트리·OCP (NFR-01 → D-REG-01)
+  - 환산 정확도 (FR-02 → D-CNV-*)
+  - 출력 포맷 (EXT-03)
+  - 설정 로드 (EXT-01 → D-CFG-01)
+  - 동적 단위 (EXT-02)
+  각 Story: Acceptance Criteria = 체크 가능 bullet
+Level 4 Gherkin Feature 1개:
+  Background: meter/feet/yard 비율 README 고정
+  Scenario: happy path meter:2.5
+  Scenario: 형식 오류 / unknown unit / 음수 / config 오류
+Level 5 체크리스트: Epic→Journey→Story→Gherkin 정합 표
+
+PDF FR-01~05, NFR-01~02, EXT-01~03 ID를 Story에 반드시 연결.</pre>
+      </div>
+
+      <div class="card card-prompt card-prompt-spec" id="p2-p2">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">P2-P2</span> Gherkin 시나리오 8개</h3>
+        <div class="meta"><span class="tag tag-ask">Ask</span></div>
+        <div class="prompt-label">Cursor Ask에 붙여넣기</div>
+        <pre class="prompt">README meter↔feet↔yard 비율 전제 Gherkin 8개.
+Given-When-Then 영어 키워드.
+필수 포함:
+  - 소수 파싱 실패 (meter:2.5.3 → FR-05)
+  - 음수 정책 문장 고정 후 meter:-1 (FR-04)
+  - 출력 원 입력 보존 (feet:10 → 모든 줄 "10 feet =" 시작 — PRD POLICY-O01)
+  - meter:0 허용
+구현 금지.</pre>
+      </div>
+    </section>
+
+    <!-- PHASE 3 -->
+    <section id="p3">
+      <h2>Phase 3 — BCE 아키텍처 설계</h2>
+      <p class="section-hint prompt-only">브랜치: <code>spec</code> · 시작 직전 <a href="#git-p2">GIT-P2</a></p>
+
+      <div class="card card-prompt card-prompt-spec" id="p3-p1">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">P3-P1</span> Dual-Track + BCE 설계</h3>
+        <div class="meta"><span class="tag tag-spec">SPEC</span></div>
+        <div class="prompt-label">Cursor Ask에 붙여넣기 · 코드 금지</div>
+        <pre class="prompt">Dual-Track(Boundary vs Domain) + BCE 설계 전문가로 행동.
+대상: UnitConverter_번호 (Python)
+제약: 구현 코드 금지. 설계·계약·테스트 목록만.
+
+# 1) Entity(Domain)
+  - UnitRegistry, ConversionService, Quantity
+  - Invariants: meter 허브, factor>0, 음수 거부(Domain 또는 Boundary 정책 명시)
+  - Domain API 시그니처 + Domain 테스트 D-CNV-01~03, D-REG-01
+
+# 2) Boundary
+  - CLI: unit:value 파싱, stderr/print 에러, TEXT/JSON/CSV/table (--format)
+  - Contract 테스트 U-IN-01~03, U-OUT-01 (Domain Mock 허용)
+
+# 3) Control
+  - ConvertUseCase, RegisterUnitUseCase, LoadConfigUseCase
+  - DomainError → 사용자 메시지 매핑表
+
+# 4) Data
+  - units.json loader (EXT-01), IUnitRatioSource 인터페이스
+  - D-CFG-01
+
+# 5) Traceability Matrix
+  Concept → FR/EXT → UseCase → Contract → Test ID → Component
+
+모호어 금지. NFR-01 OCP: 신규 단위 시 Converter core diff 0 명시.</pre>
+      </div>
+    </section>
+
+    <!-- SESSION 3 - 8 layers -->
+    <section id="s3">
+      <h2>8계층 · Rule · Skill · Command · Hook</h2>
+      <p class="section-hint prompt-only">브랜치: <code>spec</code> · 시작 직전 <a href="#git-p2">GIT-P2</a> · Agent (Harness·Rule·Command)</p>
+
+      <div class="card card-prompt card-prompt-spec" id="s3-p1">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">S3-P1</span> Harness 골격 (Python pytest)</h3>
+        <div class="meta"><span class="tag tag-setup">Agent</span></div>
+        <div class="prompt-label">Cursor Agent에 붙여넣기</div>
+        <pre class="prompt">UnitConverter BCE + Dual-Track TDD용 최소 Harness (Python).
+- pyproject.toml 또는 requirements.txt (pytest)
+- src/boundary, src/control, src/entity, src/data (빈 __init__.py)
+- tests/boundary, tests/domain, tests/data (빈 __init__.py)
+- config/units.json 샘플 (EXT-01용, meter/feet/yard)
+- docs/PRD.md 는 spec 브랜치에서 이미 있다고 가정
+코드·테스트 본문은 아직 작성하지 마. Harness만.</pre>
+      </div>
+
+      <div class="card card-prompt card-prompt-spec" id="s3-p2">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">S3-P2</span> .cursorrules 헌법</h3>
+        <div class="meta"><span class="tag tag-setup">Agent</span></div>
+        <div class="prompt-label">Cursor Agent에 붙여넣기</div>
+        <pre class="prompt">UnitConverter_번호 루트에 .cursorrules 초안 (40~80줄).
+
+도메인:
+- 입력 {unit}:{value}, 기준 meter, 초기 meter/feet/yard
+- README snapshot: meter:2.5 → feet 8.2, yard 2.7 (Boundary 1자리)
+- Domain ε: D-CNV-02 8.20210 ft (표시와 분리)
+- 에러: 형식/숫자/음수/unknown/config — 팀 PRD 메시지 SSOT
+
+아키텍처:
+- BCE + Data: boundary→control→entity, data→entity(port)
+- entity→boundary/control/data import 금지
+- Dual-Track: Domain(D-*) Mock 금지 / Boundary(U-*) Mock 허용
+- 테스트 ID: D-* domain, U-* boundary, U-OUT 출력
+- OCP: 단위 추가 시 if/elif 확장 금지, Registry.register
+- SRP: Parser / Registry / Converter / Formatter 분리
+
+TDD:
+- RED→GREEN→REFACTOR, assert 완화·skip·xfail 금지
+- git commit 사용자 요청 시만
+다른 파일 만들지 마.</pre>
+      </div>
+
+      <div class="card card-prompt card-prompt-spec" id="s3-p3">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">S3-P3</span> Skill unit-converter-tdd</h3>
+        <div class="meta"><span class="tag tag-setup">Agent</span></div>
+        <div class="prompt-label">Cursor Agent에 붙여넣기</div>
+        <pre class="prompt">.cursor/skills/unit-converter-tdd/SKILL.md 생성.
+description: UnitConverter Dual-Track TDD·BCE 절차
+포함:
+- RED / GREEN / REFACTOR 각 5~7단계
+- Domain Track vs Boundary Track 표
+- D-CNV / U-IN Test ID 우선순위
+- pytest 실행 시점 (Domain GREEN 후 Boundary RED)
+- EXT-01~03은 new_features 브랜치
+reference.md: FR/EXT/NFR ↔ Test ID 매핑表
+Command 파일은 아직 만들지 마.</pre>
+      </div>
+
+      <div class="card card-prompt card-prompt-red" id="s3-p4">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">S3-P4</span> Command /tdd-red · /review-bce</h3>
+        <div class="meta"><span class="tag tag-red">RED</span><span class="tag tag-setup">Command</span></div>
+        <div class="prompt-label">Cursor Agent에 붙여넣기</div>
+        <pre class="prompt">.cursor/commands/tdd-red.md — RED 단계, Phase/Layer/Track 선언, pytest FAIL, tests/만
+.cursor/commands/review-bce.md — import 방향, OCP/SRP, Domain Mock 규칙, 코드 수정 금지 리뷰
+Skill/Hook 은 만들지 마.</pre>
+      </div>
+    </section>
+
+    <!-- PHASE 4-5 -->
+    <section id="p4">
+      <h2>Phase 4~5 — PRD · 테스트 계획</h2>
+      <p class="section-hint prompt-only">브랜치: <code>spec</code> · 시작 직전 <a href="#git-p2">GIT-P2</a></p>
+
+      <div class="card card-prompt card-prompt-spec" id="p4-p1">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">P4-P1</span> PRD 작성 (docs/PRD.md)</h3>
+        <div class="meta"><span class="tag tag-setup">Agent</span><span class="tag tag-spec">SPEC</span></div>
+        <div class="prompt-label">Cursor Agent에 붙여넣기</div>
+        <pre class="prompt">docs/PRD.md 작성. @UnitConverter.py @README.md @Report/01 @Report/02 참조.
+⚠️ 구현 코드 금지. Python 3.11+ · pytest · BCE.
+
+섹션:
+1. 개요 (What/Who/Why — 계약·Dual-Track TDD 학습)
+2. 사용자·시나리오
+3. 기능 FR-01~05, NFR-01~02, EXT-01~03 (입출력 문자열 계약)
+4. 비기능: BCE, OCP/SRP, Dual-Track, 커버리지 목표(팀 합의)
+5. 데이터: units.json schema, cubit 등록 형식
+6. 출력: TEXT(1자리), JSON/CSV/table (EXT-03)
+7. 인수 AC-01~ (meter:2.5 snapshot, 에러 케이스, cubit, config)
+8. 회귀 RG: Domain/B Boundary TC 전건 GREEN, snapshot 변경 절차
+9. Glossary
+
+PDF Test ID (D-CNV, U-IN, D-REG, D-CFG) C2C 표 포함.
+GitHub PRD E001~E008는 Python에서 print/exit 정책에 맞게 채택 또는 단순화 — 팀 SSOT로 고정.</pre>
+      </div>
+
+      <div class="card card-prompt card-prompt-red" id="p4-p2">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">P4-P2</span> pytest RED 테스트 케이스 목록</h3>
+        <div class="meta"><span class="tag tag-red">RED</span><span class="tag tag-ask">Ask</span></div>
+        <p class="desc">코드 금지 · Catch2 → pytest 이름 치환 (Prompting/04)</p>
+        <div class="prompt-label">Cursor Ask에 붙여넣기</div>
+        <pre class="prompt">pytest를 가정하고 "구현 없이" RED 단계 테스트 케이스 제목 25~40개.
+분류:
+  - 파싱 (U-IN-01~03, FR-05)
+  - 음수·0 (FR-04)
+  - 미지원 단위 (FR-03)
+  - 비율 정확도 (D-CNV-01~03)
+  - 동적 등록 (D-REG-01, EXT-02)
+  - 설정 (D-CFG-01, EXT-01)
+  - 출력 직렬화 JSON/CSV/table (EXT-03, 각 ≥3)
+  - PyQt GUI (EXT-04, U-GUI-01, REFACTOR 후)
+각 테스트 옆 invariant 한 줄.
+코드 작성 금지.</pre>
+      </div>
+
+      <div class="card card-prompt card-prompt-spec" id="p4-p3">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">P4-P3</span> C2C 추적 표</h3>
+        <div class="meta"><span class="tag tag-spec">SPEC</span></div>
+        <div class="prompt-label">Cursor Ask에 붙여넣기</div>
+        <pre class="prompt">UnitConverter C2C 추적 표 작성. 코드 금지.
+
+| Rule | FR/EXT/NFR | Story | Gherkin | Test ID | Layer | Branch |
+FR-01→U-IN / D-CNV, FR-02→U-OUT, FR-03~05→U-IN, NFR-01→D-REG+OCP 리뷰,
+NFR-02→BCE 컴포넌트, EXT-01→D-CFG, EXT-02→D-REG, EXT-03→U-OUT
+빈 칸 없이 채우고, pytest 파일명 convention: test_d_cnv_01.py, test_u_in_01.py</pre>
+      </div>
+
+      <div class="card card-prompt card-prompt-spec" id="p4-p4">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">P4-P4</span> To-Do · Level 5 체크리스트</h3>
+        <div class="meta"><span class="tag tag-setup">Agent</span></div>
+        <div class="prompt-label">Cursor Agent에 붙여넣기</div>
+        <pre class="prompt">docs/TODO.md 작성 (코드 금지).
+🔴 Must: FR+NFR+Domain TC (D-CNV, D-REG)
+🟡 Should: Boundary TC (U-IN, U-OUT) + REFACTOR
+🟢 Nice: EXT-01~03 (new_features, GUI 이후 선택)
+🟡 Should: EXT-04 PyQt GUI (REFACTOR 후 · U-GUI-01)
+🔵 Tech Debt: 레거시 if/elif 제거 등
+📋 회귀: pytest tests/ -v, meter:2.5 snapshot
+각 항목: PRD ID + 완료 기준(테스트 가능)</pre>
+      </div>
+    </section>
+
+    <!-- RED -->
+    <section id="red">
+      <h2>RED — 설계표 · 스켈레톤</h2>
+      <p class="section-hint prompt-only">브랜치: <code>red</code> · 시작 직전 <a href="#git-p3">GIT-P3</a> · pytest <strong>FAIL</strong></p>
+
+      <div class="card card-prompt card-prompt-red" id="red-p1">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">RED-P1</span> D-CNV-01 설계 (/red-test-plan)</h3>
+        <div class="meta"><span class="tag tag-red">RED</span><span class="tag tag-ask">Ask</span></div>
+        <div class="prompt-label">Cursor Ask · /red-test-plan</div>
+        <pre class="prompt">/red-test-plan
+Phase: red | Layer: entity | Track: Domain
+이번 RED 묶음: D-CNV-01 (FR-02, NFR-01)
+
+다음 표만. tests/·src/ 파일 만들지 마.
+1. C2C (FR-02 → D-CNV-01)
+2. Given: 1 feet / When: to_meters / Then: 0.3048 ±1e-9
+3. BCE·Mock: Domain Track — Mock 금지
+4. pytest 파일: tests/domain/test_d_cnv_01.py
+
+금지: GREEN, skip/xfail
+완료: /red-skeleton 준비됐다고 한 줄.</pre>
+      </div>
+
+      <div class="card card-prompt card-prompt-red" id="red-p2">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">RED-P2</span> U-IN-01/02/03 설계</h3>
+        <div class="meta"><span class="tag tag-red">RED</span></div>
+        <div class="prompt-label">Cursor Ask · Boundary Track</div>
+        <pre class="prompt">Phase: red | Layer: boundary | Track: Boundary
+RED 묶음: U-IN-01, U-IN-02, U-IN-03 (FR-03~05)
+
+Track A 표:
+| Test ID | Given | Then | Expected RED Failure |
+U-IN-01: "" → 형식 오류
+U-IN-02: "meter" → 형식 오류
+U-IN-03: "meter:-1" → 음수 거부
+Domain Mock UseCase 허용 (Boundary Track)</pre>
+      </div>
+
+      <div class="card card-prompt card-prompt-red" id="red-p3">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">RED-P3</span> D-CNV-01 스켈레톤 (/red-skeleton)</h3>
+        <div class="meta"><span class="tag tag-red">RED</span><span class="tag tag-setup">Agent</span></div>
+        <div class="prompt-label">Cursor Agent · /red-skeleton</div>
+        <pre class="prompt">/red-skeleton
+Phase: red | Layer: entity | Track: Domain
+Test ID: D-CNV-01
+파일: tests/domain/test_d_cnv_01.py
+
+규칙:
+- AAA 주석 (Given / When / Then)
+- Then: pytest.fail("RED: D-CNV-01 — feet to meters not implemented") 또는 import 실패
+- assert 본문·skip·xfail·통과 더미 금지
+- src/ 수정 금지
+
+완료 후:
+python -m pytest tests/domain/test_d_cnv_01.py -v
+→ FAIL 확인 보고</pre>
+      </div>
+
+      <div class="card card-prompt card-prompt-red" id="red-p4">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">RED-P4</span> U-OUT-01 스켈레톤</h3>
+        <div class="meta"><span class="tag tag-red">RED</span></div>
+        <p class="desc">Domain P0 GREEN 선행 권장 · PDF: 팀 리뷰 전 Boundary TC</p>
+        <div class="prompt-label">Cursor Agent · /red-skeleton</div>
+        <pre class="prompt">/red-skeleton
+Phase: red | Layer: boundary | Track: Boundary
+Test ID: U-OUT-01 (FR-02)
+파일: tests/boundary/test_u_out_01.py
+
+Given: stdin "meter:2.5"
+Then: stdout에 "8.2" feet, "2.7" yard, "2.5" meter 포함 (TEXT, 1자리)
+Domain ConvertUseCase Mock 가능
+pytest FAIL 확인. src/ 구현은 GREEN에서.</pre>
+      </div>
+    </section>
+
+    <!-- GREEN -->
+    <section id="green">
+      <h2>GREEN — 최소 구현</h2>
+      <p class="section-hint prompt-only">브랜치: <code>green</code> · 시작 직전 <a href="#git-p4">GIT-P4</a> · pytest <strong>PASS</strong></p>
+
+      <div class="card card-prompt card-prompt-green" id="grn-p1">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">GRN-P1</span> D-CNV-01 (/green-minimal)</h3>
+        <div class="meta"><span class="tag tag-green">GREEN</span><span class="tag tag-setup">Agent</span></div>
+        <div class="prompt-label">Cursor Agent · /green-minimal</div>
+        <pre class="prompt">/green-minimal
+Phase: green | Layer: entity | Track: Domain
+RED: D-CNV-01
+
+1. RED 재확인 — pytest FAIL
+2. src/entity/ 최소 구현:
+   - ConversionService 또는 convert_to_meters(feet) 
+   - formula: v_m = v_src * meters_per_unit[src]  (feet=0.3048)
+   - if/elif 단위 분기 금지 → UnitRegistry SSOT (NFR-01)
+   - entity→boundary import 금지
+3. pytest.fail 제거 → assert abs(result - 0.3048) &lt; 1e-9
+4. PASS:
+   python -m pytest tests/domain/test_d_cnv_01.py -v
+
+금지: U-IN 동시 구현, REFACTOR, assert 완화
+git commit은 내가 요청할 때만.</pre>
+      </div>
+
+      <div class="card card-prompt card-prompt-green" id="grn-p2">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">GRN-P2</span> D-CNV-02 · D-CNV-03 묶음</h3>
+        <div class="meta"><span class="tag tag-green">GREEN</span></div>
+        <div class="prompt-label">Cursor Agent · /green-minimal</div>
+        <pre class="prompt">/green-minimal
+Phase: green | Layer: entity | Track: Domain
+RED 묶음: D-CNV-02, D-CNV-03
+
+D-CNV-02: 2.5 meter → 8.20210 feet (Domain 정밀도, Formatter 반올림 아님)
+D-CNV-03: feet→yard meter 경유 일치 (직접 ft-yd 상수 금지)
+
+Registry에 meter/feet/yard seed.
+pytest tests/domain/test_d_cnv_*.py -v → PASS
+OCP: Converter core에 unit 이름 literal 추가 금지</pre>
+      </div>
+
+      <div class="card card-prompt card-prompt-green" id="grn-p3">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">GRN-P3</span> U-IN + CLI 최소 (Boundary)</h3>
+        <div class="meta"><span class="tag tag-green">GREEN</span></div>
+        <div class="prompt-label">Cursor Agent · /green-minimal</div>
+        <pre class="prompt">/green-minimal
+Phase: green | Layer: boundary | Track: Boundary
+RED: U-IN-01~03, U-OUT-01
+
+src/boundary/: parser (unit:value), cli main
+src/control/: ConvertUseCase
+FR-03~05 에러 메시지 — docs/PRD.md SSOT
+U-OUT-01: meter:2.5 → TEXT 3줄, feet 8.2 / yard 2.7 (1자리)
+
+pytest tests/boundary/ tests/domain/ -v
+Domain Mock 없이 integration smoke 1개 권장</pre>
+      </div>
+
+      <div class="card card-prompt card-prompt-green" id="grn-p4">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">GRN-P4</span> Golden Master — U-OUT-01 (/golden-master)</h3>
+        <div class="meta"><span class="tag tag-green">GREEN</span><span class="tag tag-setup">Agent</span></div>
+        <p class="desc">GRN-P3 pytest PASS 선행 · REFACTOR 전 · CLI stdout 기준 고정</p>
+        <div class="prompt-label">Cursor Agent · /golden-master (없으면 본문 전체 복붙)</div>
+        <pre class="prompt">/golden-master
+Phase: green | Layer: boundary | Track: Boundary
+대상: U-OUT-01 (FR-02, PRD AC-01)
+
+전제: python -m pytest tests/boundary/ tests/domain/ -v → 전부 PASS (GRN-P3 완료)
+
+Golden Master만 구축 — src/ 로직 변경 금지:
+1. tests/_approval.py — assert_matches_golden(actual, relative) (없으면 생성)
+2. tests/golden/u_out_01_meter_2_5.approved.txt
+3. tests/boundary/test_u_out_01.py — stdin "meter:2.5" stdout 전체 golden 비교
+   - PRD POLICY-O01: 각 줄 "N unit =" 형식 · TEXT 1자리 (feet 8.2, yard 2.7)
+4. 기준 생성:
+   UPDATE_GOLDEN=1 python -m pytest tests/boundary/test_u_out_01.py -v
+5. 검증 (UPDATE_GOLDEN 없음) → matched 확인
+
+규칙:
+- golden 수동 편집으로 통과 우회 금지 · UPDATE_GOLDEN은 팀 승인 후만
+- D-CNV 숫자 assert(domain) 테스트는 유지 — GM은 Boundary stdout 위주
+- (선택) U-IN-03 meter:-1 stderr golden 1건 추가 가능
+
+보고: golden 파일 경로 · matched 여부 · diff 있으면 요약
+git commit은 내가 요청할 때만.</pre>
+      </div>
+    </section>
+
+    <!-- REFACTOR -->
+    <section id="refactor">
+      <h2>REFACTOR — OCP/SRP 정리</h2>
+      <p class="section-hint prompt-only">브랜치: <code>refactoring</code> · 시작 직전 <a href="#git-p5">GIT-P5</a> · pytest PASS · REF-P1 Issue → REF-P2 resolve</p>
+
+      <div class="card card-prompt card-prompt-refactor" id="ref-p1">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">REF-P1</span> 스멜 탐지 (/refactor-smell)</h3>
+        <div class="meta"><span class="tag tag-refactor">REFACTOR</span><span class="tag tag-ask">Ask</span></div>
+        <p class="desc">코드 수정·commit 금지. /refactor-safe 후보는 GitHub Issue로 등록(REF-P1).</p>
+        <div class="prompt-label">Cursor Ask · 코드 수정 금지 · Issue는 Agent(gh) 또는 UI</div>
+        <pre class="prompt">/refactor-smell
+Phase: refactor | Scope: src/ tests/
+
+전제: python -m pytest tests/ -v → 전부 PASS 아니면 중단.
+
+스멜 표 (코드 수정·commit 금지):
+| P0/P1/P2 | 스멜 | 위치 | FR/NFR | 리팩터 후보 | Issue |
+| | if/elif unit 분기 | | NFR-01 OCP | Registry | |
+| | Parser+Convert+Print 혼재 | | NFR-02 SRP | BCE 분리 | |
+| | 하드코oded 3.28084 | | EXT-01 | config/units.json | |
+| | Magic number | | | constants/registry | |
+| | BCE import 위반 | | | | |
+
+Change Budget: 파일≤3 · 클래스≤1 · 메서드≤3
+/refactor-safe 후보 1~3개 제안.
+
+GitHub Issue 등록 (후보마다 1건):
+- gh issue create — 라벨 refactor 권장
+- 제목: [REF] {스멜 한 줄}
+- 본문: 위치 · FR/NFR · Budget · 완료 기준(pytest PASS + GM matched)
+- 스멜 표 Issue 열에 #번호 또는 URL 기록
+
+다음: P0 1개 Issue 번호를 REF-P2에 적고 실행.</pre>
+      </div>
+
+      <div class="card card-prompt card-prompt-refactor" id="ref-p2">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">REF-P2</span> safe 리팩터 (/refactor-safe)</h3>
+        <div class="meta"><span class="tag tag-refactor">REFACTOR</span><span class="tag tag-setup">Agent</span></div>
+        <p class="desc">REF-P1 GitHub Issue와 1:1 연동 · 완료 시 Issue resolve · golden matched 유지</p>
+        <div class="prompt-label">Cursor Agent · /refactor-safe · Issue # 아래에 기입</div>
+        <pre class="prompt">/refactor-safe
+Phase: refactor | Layer: entity+control | Track: Domain
+
+GitHub Issue (REF-P1에서 생성): #___   ← 번호 기입 (없으면 "없음" — Issue 단계 생략)
+
+/refactor-smell·Issue 본문과 동일 스멜 1개만 (예: if/elif unit → Registry)
+Budget: 파일 2, 메서드 2 (Issue 본문 Budget 이내)
+
+원칙:
+- 입출력 계약·에러 메시지·D-CNV golden 값 변경 금지
+- GRN-P4 Golden Master matched 유지 (UPDATE_GOLDEN 없음)
+- assert 완화·skip 금지
+- 기능 추가 금지 (EXT는 new_features)
+- 작업 전후 Issue #와 스멜·변경 파일이 일치하는지 확인
+
+완료 검증:
+- python -m pytest tests/ -v → PASS
+- Golden Master matched (UPDATE_GOLDEN 없음)
+- meter:2.5 manual smoke
+
+GitHub Issue resolve (Issue #가 있을 때만):
+- pytest·GM 통과 확인 후 gh issue close ___ --comment "REF-P2 완료: {스멜} · pytest PASS · GM matched"
+- (commit 시) 메시지에 Closes #___ 또는 Refs #___ 포함 — commit은 내가 요청할 때만
+
+보고: Issue # · 변경 요약 · pytest · GM matched · Issue closed 여부 · OCP diff 0 확인 방법</pre>
+      </div>
+    </section>
+
+    <!-- EXT -->
+    <section id="ext">
+      <h2>EXT — new_features 브랜치</h2>
+      <p class="section-hint prompt-only">브랜치: <code>new_features</code> · 시작 직전 <a href="#git-p6">GIT-P6</a> · <strong>REFACTOR(REF-P2) 후</strong> · 우선 <a href="#ext-p4">EXT-P4~P5</a> PyQt GUI</p>
+
+      <div class="card card-prompt card-prompt-ext" id="ext-p4">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">EXT-P4</span> PyQt GUI RED 설계 (EXT-04 · U-GUI-01)</h3>
+        <div class="meta"><span class="tag tag-ext">EXT</span><span class="tag tag-red">RED</span><span class="tag tag-ask">Ask</span></div>
+        <p class="desc">REF-P2·CLI GM 완료 후 · 코드·tests 파일 생성 금지</p>
+        <div class="prompt-label">Cursor Ask에 붙여넣기</div>
+        <pre class="prompt">Phase: new_features | Layer: boundary/gui | Track: Boundary
+EXT-04 PyQt GUI · RED 설계
+
+전제: REF-P2 완료 · python -m pytest tests/ -v → PASS · GRN-P4 CLI GM matched
+
+@docs/PRD.md EXT-04 delta 제안 (본문만, 파일 저장은 Agent EXT-P5):
+- PyQt6 또는 PySide6 · unit+value 입력 · Convert 버튼 · 결과 영역 · 에러 표시
+- ConvertUseCase 재사용 · entity 직접 import 금지 · CLI·U-OUT GM 유지
+
+RED 설계표만 — tests/·src/ 파일 만들지 마:
+| Test ID | Given | When | Then | Expected RED Failure |
+U-GUI-01: meter=2.5, feet/yard 필드 또는 단일 unit:value → Convert → feet 8.2 · yard 2.7 (1자리)
+
+C2C 행: EXT-04 → U-GUI-01 → tests/boundary/test_u_gui_01.py → new_features
+pytest-qt(qtbot) 또는 Presenter mock 중 팀 선택 1줄 근거
+
+금지: Domain 로직 GUI에 구현 · CLI golden 변경
+완료: EXT-P5(GREEN) 준비됐다고 한 줄.</pre>
+      </div>
+
+      <div class="card card-prompt card-prompt-ext" id="ext-p5">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">EXT-P5</span> PyQt GUI GREEN (EXT-04 · /green-minimal)</h3>
+        <div class="meta"><span class="tag tag-ext">EXT</span><span class="tag tag-green">GREEN</span><span class="tag tag-setup">Agent</span></div>
+        <p class="desc">EXT-P4 설계 · CLI·Domain 회귀 · GM matched 유지</p>
+        <div class="prompt-label">Cursor Agent · /green-minimal (없으면 본문 전체 복붙)</div>
+        <pre class="prompt">/green-minimal
+Phase: new_features | Layer: boundary/gui | Track: Boundary
+EXT-04 · Test ID: U-GUI-01
+
+1. Harness delta:
+   - src/boundary/gui/ (MainWindow 또는 View + Presenter)
+   - requirements: PyQt6 (또는 PySide6) · pytest-qt (qtbot 사용 시)
+2. RED: tests/boundary/test_u_gui_01.py — pytest.fail 또는 qtbot → FAIL
+3. GREEN: Presenter가 ConvertUseCase만 호출 — 환산·Registry 로직 GUI에 넣지 마
+4. U-GUI-01: meter 2.5 → 결과에 feet 8.2 · yard 2.7 (PRD POLICY-O01 · 1자리)
+5. PASS: python -m pytest tests/boundary/test_u_gui_01.py -v
+6. 회귀:
+   python -m pytest tests/domain/ tests/boundary/ -v
+   GRN-P4 CLI Golden Master matched (UPDATE_GOLDEN 없음)
+
+금지: entity/core if/elif · CLI U-OUT golden 수정 · Domain assert 완화
+실행: python -m src.boundary.gui (또는 main_gui.py) smoke 1회 보고
+git commit은 내가 요청할 때만.</pre>
+      </div>
+
+      <div class="card card-prompt card-prompt-ext" id="ext-p1">
+        <span class="card-type">복붙 Prompt · 선택</span>
+        <h3><span class="prompt-id">EXT-P1</span> units.json (EXT-01)</h3>
+        <div class="meta"><span class="tag tag-ext">EXT</span><span class="tag tag-green">GREEN</span></div>
+        <div class="prompt-label">Cursor Agent · /green-minimal</div>
+        <pre class="prompt">/green-minimal
+Phase: green | Branch: new_features | Track: Data+Domain
+EXT-01 + D-CFG-01
+
+1. RED: tests/data/test_d_cfg_01.py — corrupt json → ConfigError
+2. src/data/units_loader.py — config/units.json
+3. PRD schema와 팀 JSON 형식 통일 (meter/feet/yard)
+4. --config 또는 env 경로 (PRD SSOT)
+5. pytest tests/data/ tests/domain/ -v PASS
+
+금지: Converter if/elif에 json 키 하드코딩</pre>
+      </div>
+
+      <div class="card card-prompt card-prompt-ext" id="ext-p2">
+        <span class="card-type">복붙 Prompt · 선택</span>
+        <h3><span class="prompt-id">EXT-P2</span> 동적 cubit 등록 (EXT-02)</h3>
+        <div class="meta"><span class="tag tag-ext">EXT</span></div>
+        <div class="prompt-label">Cursor Agent · /green-minimal</div>
+        <pre class="prompt">/green-minimal
+Phase: green | Branch: new_features
+EXT-02 + D-REG-01
+
+RED: register 1 cubit = 0.4572 meter → catalog 반영 → cubit:1 변환 4건
+OCP 검증: ConversionService core diff 0 (Registry.register만)
+pytest tests/domain/test_d_reg_01.py -v</pre>
+      </div>
+
+      <div class="card card-prompt card-prompt-ext" id="ext-p3">
+        <span class="card-type">복붙 Prompt · 선택</span>
+        <h3><span class="prompt-id">EXT-P3</span> --format json|csv|table (EXT-03)</h3>
+        <div class="meta"><span class="tag tag-ext">EXT</span></div>
+        <div class="prompt-label">Cursor Agent · /green-minimal</div>
+        <pre class="prompt">/green-minimal
+Phase: green | Branch: new_features
+EXT-03
+
+src/boundary/formatters/: TextFormatter, JsonFormatter, CsvFormatter, TableFormatter
+OCP: 새 포맷 = Formatter 추가만, Converter 수정 0
+각 포맷 pytest ≥3 (PRD §6.2~6.4 또는 팀 PRD)
+CLI: --format=text|json|csv|table
+
+pytest tests/boundary/test_format_*.py -v</pre>
+      </div>
+    </section>
+
+    <!-- REPORT -->
+    <section id="report">
+      <h2>Report · Export</h2>
+      <p class="section-hint prompt-only">출처: Prompting/06 · Report 01~05</p>
+
+      <div class="card card-prompt card-prompt-neutral" id="rpt-p1">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">RPT-P1</span> Report 5종 일괄</h3>
+        <div class="meta"><span class="tag tag-setup">Agent</span></div>
+        <div class="prompt-label">Cursor Agent에 붙여넣기</div>
+        <pre class="prompt">Report 폴더에 보고서 작성해줘.
+
+참조: @docs/PRD.md @README.md @UnitConverter.py @Report/ (기존 초안)
+생성:
+  Report/01.문제정의_및_사용자여정_보고서.md
+  Report/02.요구사항분석_보고서.md
+  Report/03.아키텍처_설계보고서.md
+  Report/04.테스트계획서.md
+  Report/05.프로젝트_완성도_체크리스트.md
+
+Prompting/01~05 산출물과 C2C 표 정합. 코드 구현 본문은 넣지 마.</pre>
+      </div>
+
+      <div class="card card-prompt card-prompt-neutral" id="rpt-p2">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">RPT-P2</span> Transcript Export</h3>
+        <div class="meta"><span class="tag tag-repeat">Repeat</span></div>
+        <div class="prompt-label">Cursor Agent · 세션 마무리</div>
+        <pre class="prompt">Report 폴더에 보고서 생성하고, Prompting 폴더에 Transcript도 Export 해줘</pre>
+      </div>
+
+      <div class="card card-prompt card-prompt-neutral" id="rpt-p3">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">RPT-P3</span> 팀 리뷰 제출 전 체크 (15:40)</h3>
+        <div class="meta"><span class="tag tag-ask">Ask</span></div>
+        <div class="prompt-label">Cursor Ask · 코드 수정 금지</div>
+        <pre class="prompt">UnitConverter D2 팀 리뷰 제출 전 점검. 코드 수정 금지.
+
+PDF 필수:
+□ FR-01~05 + NFR-01~02 구현 근거
+□ Domain TC (D-CNV, D-REG) pytest PASS 로그
+□ C2C 표 (FR→Test ID→파일)
+□ Boundary TC (U-IN, U-OUT, U-GUI) — new_features 브랜치
+□ git branch — 지금까지 만든 Phase 브랜치만 존재하면 OK (미래 브랜치 없어도 됨)
+□ EXT-04 PyQt GUI (EXT-P4~P5) — REFACTOR 후 필수 권장
+□ EXT-01~03 (new_features) — 시간 되면
+□ AI 활용·TC 팁·리팩터 회고 3 bullet
+
+python -m pytest tests/ -v 결과 붙여넣기</pre>
+      </div>
+    </section>
+
+    <!-- COMMAND -->
+    <section id="cmd">
+      <h2>부록 — Command 파일 생성</h2>
+      <p class="section-hint prompt-only">한 번에 Command md 생성 · src/tests는 만들지 않음</p>
+
+      <div class="card card-prompt card-prompt-red" id="cmd-p1">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">CMD-P1</span> Command 5개 한 번에</h3>
+        <div class="prompt-label">Cursor Agent</div>
+        <pre class="prompt">@.cursorrules @docs/PRD.md
+.cursor/commands/ 아래만 생성:
+- red-test-plan.md   (RED 설계표, tests/src 금지)
+- red-skeleton.md    (pytest.fail 스켈레톤)
+- green-minimal.md   (최소 GREEN, OCP/SRP)
+- refactor-smell.md  (분석만)
+- refactor-safe.md   (Budget 내 1스멜)
+각: Phase 선언, pytest 예시, 금지, 보고 섹션.
+src/, tests/, Skill, Hook 만들지 마.</pre>
+      </div>
+
+      <div class="card card-prompt card-prompt-neutral" id="cmd-p2">
+        <span class="card-type">복붙 Prompt · 선택</span>
+        <h3><span class="prompt-id">CMD-P2</span> C++ Catch2 트랙 (GitHub 참고)</h3>
+        <p class="desc">Python 과제가 아닐 때만 · kznetwork/UnitConverter_1004 참고</p>
+        <div class="prompt-label">Cursor Agent</div>
+        <pre class="prompt">UnitConverter C++17 Catch2 CMake Harness만 골격 생성.
+entity/ control/ boundary/ data/ tests/domain tests/boundary
+CMakeLists.txt + Catch2 FetchContent
+DT-* / BT-* Test ID는 PRD v1.0 SSOT
+Python pytest 프롬프트와 동일 Phase·C2C, 파일명만 Catch2 TEST_CASE
+레거시: UnitConverter.cpp (단일 파일) 분석만, 삭제하지 마</pre>
+      </div>
+    </section>
+
+    <!-- COMMON -->
+    <section id="common">
+      <h2>공통 · 8계층 점검</h2>
+      <p class="section-hint prompt-only">세션 마무리 · commit은 사용자 요청 시만</p>
+
+      <div class="card card-prompt card-prompt-neutral" id="com-p1">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">COM-P1</span> 8계층 + Hook 마무리 점검</h3>
+        <div class="meta"><span class="tag tag-ask">Ask</span></div>
+        <div class="prompt-label">Cursor Ask · 코드 수정 금지</div>
+        <pre class="prompt">UnitConverter 세션 마무리 점검. 코드·파일 수정 금지.
+
+| 계층 | 상태 | 근거 |
+| Model | | |
+| Agent | | Ask/Agent 분리 |
+| Harness | | pytest, src/tests BCE |
+| Rule | | .cursorrules FR/NFR |
+| Skill | | unit-converter-tdd |
+| Command | | tdd-red, red-skeleton, ... |
+| Tool/MCP | | pytest |
+| Test/Review Loop | | D-CNV PASS? U-IN RED? |
+| Hook | | (선택) postToolUse Write |
+
+계층 중복·빈 구멍 1가지 권고.</pre>
+      </div>
+
+      <div class="card card-prompt card-prompt-neutral" id="com-p2">
+        <span class="card-type">복붙 Prompt</span>
+        <h3><span class="prompt-id">COM-P2</span> 커밋 (사용자 요청 시만)</h3>
+        <div class="meta"><span class="tag tag-git">commit</span></div>
+        <div class="prompt-label">Cursor Agent · git commit</div>
+        <pre class="prompt">지금 변경분만 커밋해줘. merge·브랜치 삭제 금지.
+현재 브랜치: [spec|red|green|refactoring|new_features] 에서만 commit.
+메시지: green: D-CNV-01 feet_to_meters minimal
+대상: tests/domain/test_d_cnv_01.py, src/entity/conversion_service.py
+git commit 전: git branch --show-current, git status, pytest 해당 테스트 PASS</pre>
+      </div>
+    </section>
+
+    <div class="note">
+      <strong>파일 위치:</strong> <code>3_Note/UnitConverter_Prompts.html</code><br>
+      <strong>시드:</strong> <code>강의자료/.../UnitConverter_XX/UnitConverter.py</code> ·
+      <a href="https://github.com/kznetwork/CursorAI/tree/main/src/UnitConverter_XX" style="color:var(--accent)">kznetwork/CursorAI</a><br>
+      <strong>GitHub Prompting:</strong> <a href="https://github.com/kznetwork/UnitConverter_1004/tree/main/Prompting" style="color:var(--accent)">UnitConverter_1004/Prompting</a> (01~06)<br>
+      <strong>검증 일자:</strong> D2 PDF · 워크북 · README · PRD v1.0 · 브랜치: Phase 시작 직전 분기(GIT-P1~P6) · merge 없음.
+    </div>
+
+    <div class="note note-warn">
+      <strong>주의:</strong> README 예시 출력은 소수 <strong>1자리</strong>(8.2 / 2.7). Domain 테스트 D-CNV-02는 <strong>8.20210</strong> 등 고정밀.
+      Formatter(Boundary)와 ConversionService(Domain)를 분리하지 않으면 TC가 서로 깨집니다.
+    </div>
+  </main>
+  <script>
+    (function () {
+      const COPY_LABEL = "Copy";
+      const COPIED_LABEL = "Copied!";
+      const RESET_MS = 2000;
+
+      async function copyText(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+          return;
+        }
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "fixed";
+        ta.style.left = "-9999px";
+        document.body.appendChild(ta);
+        ta.select();
+        const ok = document.execCommand("copy");
+        document.body.removeChild(ta);
+        if (!ok) throw new Error("copy failed");
+      }
+
+      document.querySelectorAll(".card-prompt pre.prompt").forEach(function (block) {
+        const wrap = document.createElement("div");
+        wrap.className = "prompt-wrap";
+        block.parentNode.insertBefore(wrap, block);
+        wrap.appendChild(block);
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "copy-btn";
+        btn.textContent = COPY_LABEL;
+        btn.setAttribute("aria-label", "프롬프트 복사");
+
+        btn.addEventListener("click", async function () {
+          const text = block.textContent;
+          try {
+            await copyText(text);
+            btn.textContent = COPIED_LABEL;
+            btn.classList.add("copied");
+            setTimeout(function () {
+              btn.textContent = COPY_LABEL;
+              btn.classList.remove("copied");
+            }, RESET_MS);
+          } catch (err) {
+            btn.textContent = "Failed";
+            btn.classList.remove("copied");
+            setTimeout(function () { btn.textContent = COPY_LABEL; }, RESET_MS);
+          }
+        });
+
+        wrap.appendChild(btn);
+      });
+
+      /* ── 진행 체크 (localStorage) ── */
+      const STORAGE_PREFIX = "uc-prompt-done:";
+      const cards = document.querySelectorAll(".card.card-prompt[id]");
+
+      function isDone(id) {
+        try {
+          return localStorage.getItem(STORAGE_PREFIX + id) === "1";
+        } catch (e) {
+          return false;
+        }
+      }
+
+      function setDone(id, done) {
+        try {
+          if (done) localStorage.setItem(STORAGE_PREFIX + id, "1");
+          else localStorage.removeItem(STORAGE_PREFIX + id);
+        } catch (e) { /* private mode */ }
+      }
+
+      function applyDone(id, done) {
+        const card = document.getElementById(id);
+        if (card) card.classList.toggle("prompt-done", done);
+        document.querySelectorAll('.run-link[href="#' + id + '"]').forEach(function (link) {
+          const li = link.closest("li");
+          if (li) li.classList.toggle("run-step-done", done);
+          const cb = li && li.querySelector(".run-done-cb");
+          if (cb && cb.checked !== done) cb.checked = done;
+        });
+        document.querySelectorAll('.prompt-done-cb[data-prompt-id="' + id + '"]').forEach(function (cb) {
+          if (cb.checked !== done) cb.checked = done;
+        });
+      }
+
+      function updateSummary() {
+        const el = document.getElementById("progress-summary");
+        if (!el || !cards.length) return;
+        let done = 0;
+        cards.forEach(function (c) { if (isDone(c.id)) done++; });
+        el.textContent = done + " / " + cards.length + " 완료";
+      }
+
+      function bindCheckbox(cb, id) {
+        cb.addEventListener("change", function () {
+          const done = cb.checked;
+          setDone(id, done);
+          applyDone(id, done);
+          updateSummary();
+        });
+      }
+
+      cards.forEach(function (card) {
+        const id = card.id;
+        const wrap = document.createElement("div");
+        wrap.className = "prompt-done-wrap";
+        const label = document.createElement("label");
+        const cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.className = "prompt-done-cb";
+        cb.setAttribute("data-prompt-id", id);
+        cb.checked = isDone(id);
+        label.appendChild(cb);
+        label.appendChild(document.createTextNode("완료"));
+        wrap.appendChild(label);
+        card.insertBefore(wrap, card.firstChild);
+        bindCheckbox(cb, id);
+        if (cb.checked) card.classList.add("prompt-done");
+      });
+
+      document.querySelectorAll(".run-link[href^='#']").forEach(function (link) {
+        const href = link.getAttribute("href");
+        if (!href || href.length < 2) return;
+        const id = href.slice(1);
+        if (!document.getElementById(id)) return;
+        const li = link.closest("li");
+        if (!li || li.querySelector(".run-done-cb")) return;
+        const runWrap = document.createElement("span");
+        runWrap.className = "run-done-wrap";
+        const runCb = document.createElement("input");
+        runCb.type = "checkbox";
+        runCb.className = "run-done-cb";
+        runCb.setAttribute("data-prompt-id", id);
+        runCb.checked = isDone(id);
+        runCb.setAttribute("aria-label", id + " 완료");
+        runWrap.appendChild(runCb);
+        li.appendChild(runWrap);
+        if (runCb.checked) li.classList.add("run-step-done");
+        bindCheckbox(runCb, id);
+      });
+
+      updateSummary();
+
+      const resetBtn = document.getElementById("progress-reset");
+      if (resetBtn) {
+        resetBtn.addEventListener("click", function () {
+          if (!confirm("모든 Prompt 완료 체크를 해제할까요?")) return;
+          cards.forEach(function (card) {
+            setDone(card.id, false);
+            applyDone(card.id, false);
+          });
+          updateSummary();
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
