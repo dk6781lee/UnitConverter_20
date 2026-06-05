@@ -1,25 +1,21 @@
 """D-CNV-03 · FR-04 negative · D-CNV-03b · FR-01 zero (Domain Track)."""
 
 import pytest
+from decimal import Decimal
 
 
 def test_d_cnv_03_negative_quantity_rejected() -> None:
     # Given: negative numeric value
-    from decimal import Decimal
-
+    from entity.domain_error import DomainError
     from entity.quantity import Quantity
 
-    # When: create Quantity with -1
-    Quantity.create(Decimal("-1"), "meter")
-
-    # Then: DomainError (GREEN에서 assert)
-    pytest.fail("RED: D-CNV-03 — negative Quantity not implemented")
+    # When / Then: create Quantity with -1 → DomainError
+    with pytest.raises(DomainError):
+        Quantity.create(Decimal("-1"), "meter")
 
 
 def test_d_cnv_03b_zero_meter_conversion() -> None:
     # Given: Registry bootstrap, quantity = 0 meter
-    from decimal import Decimal
-
     from entity.conversion_service import ConversionService
     from entity.quantity import Quantity
     from entity.unit_registry import UnitRegistry
@@ -31,7 +27,7 @@ def test_d_cnv_03b_zero_meter_conversion() -> None:
 
     # When: convert zero to feet via hub
     service = ConversionService(registry)
-    service.convert(quantity, "feet")
+    result = service.convert(quantity, "feet")
 
-    # Then: 0 feet (GREEN에서 assert)
-    pytest.fail("RED: D-CNV-03b — zero conversion not implemented")
+    # Then: 0 feet
+    assert result == Decimal("0")

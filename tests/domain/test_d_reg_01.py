@@ -1,12 +1,11 @@
 """D-REG-01 · NFR-01 inch add · D-REG-01b · factor>0 (Domain Track)."""
 
 import pytest
+from decimal import Decimal
 
 
 def test_d_reg_01_inch_register_ocp() -> None:
     # Given: bootstrap Registry, inch meters_per_unit = 0.0254
-    from decimal import Decimal
-
     from entity.conversion_service import ConversionService
     from entity.unit_registry import UnitRegistry
 
@@ -19,20 +18,19 @@ def test_d_reg_01_inch_register_ocp() -> None:
     service = ConversionService(registry)
     _ = service
 
-    # Then: inch in list_units; core converter unchanged (GREEN에서 assert)
-    pytest.fail("RED: D-REG-01 — inch register not implemented")
+    # Then: inch in list_units; core converter unchanged
+    assert "inch" in registry.list_units()
 
 
 def test_d_reg_01b_zero_factor_rejected() -> None:
     # Given: empty Registry
-    from decimal import Decimal
-
+    from entity.domain_error import DomainError
     from entity.unit_registry import UnitRegistry
 
     registry = UnitRegistry()
 
-    # When: register unit with zero meters_per_unit
-    registry.register("bad", Decimal("0"))
+    # When / Then: register unit with zero meters_per_unit → DomainError
+    with pytest.raises(DomainError):
+        registry.register("bad", Decimal("0"))
 
-    # Then: DomainError reject (GREEN에서 assert)
-    pytest.fail("RED: D-REG-01b — zero factor reject not implemented")
+    assert registry.list_units() == []

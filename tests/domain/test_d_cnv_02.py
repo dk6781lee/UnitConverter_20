@@ -1,12 +1,10 @@
 """D-CNV-02 · FR-02 round-trip — feet → meter → feet (Domain Track)."""
 
-import pytest
+from decimal import Decimal
 
 
 def test_d_cnv_02_feet_round_trip() -> None:
     # Given: Registry with feet = 0.3048, quantity = 1 feet
-    from decimal import Decimal
-
     from entity.conversion_service import ConversionService
     from entity.quantity import Quantity
     from entity.unit_registry import UnitRegistry
@@ -18,8 +16,7 @@ def test_d_cnv_02_feet_round_trip() -> None:
     # When: hub round-trip feet → meter → feet
     service = ConversionService(registry)
     meters = service.to_meters(quantity)
-    service.from_meters(meters, "feet")
+    result = service.from_meters(meters, "feet")
 
-    # Then: round-trip restores 1 feet (GREEN에서 assert)
-    _ = meters
-    pytest.fail("RED: D-CNV-02 — feet round-trip not implemented")
+    # Then: round-trip restores 1 feet
+    assert result == Decimal("1")
