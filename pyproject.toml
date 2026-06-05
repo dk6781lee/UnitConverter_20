@@ -11,4 +11,6 @@ pythonpath = ["src"]
 dev = [
     "pytest>=8",
     "pytest-cov",
+    "pytest-qt",
+    "PyQt6",
 ]
